@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour {
 		GameObject doodlePrefab = Resources.Load<GameObject> ("Doodle");
 		doodle = Instantiate<GameObject> (doodlePrefab);
 		doodleSkinName = "normal";
+
+		Queue<int> qu = new Queue<int> ();
 	}
 	
 	// Update is called once per frame
@@ -38,14 +40,21 @@ public class GameManager : MonoBehaviour {
 	// 创建platform
 	void updatePlatform()
 	{
+		//如果队列内地面数量不大于6
 		if (platforms.Count <= 6) {
-			//设置platform位置
-			platformPosition.x = Random.value * Constant.SCENE_WIDTH / 2;
-			Debug.Log (platformPosition.x);
-			platformPosition.y += Constant.VERTICAL_DISTANCE_BETWEEN_PLATFORMS;
 			//加载一个platform的prefab
 			Platform platform = Platform.create (0, 0, 0, platformPosition);
+			//设置platform位置
+			platformPosition.x = Random.Range (-Constant.SCENE_WIDTH / 2, Constant.SCENE_WIDTH / 2);
+			platformPosition.y += Constant.VERTICAL_DISTANCE_BETWEEN_PLATFORMS;
 			platforms.Enqueue (platform);
+		}
+		//如果队列中的队首地面在摄像机范围的下面
+		if (platforms.Peek ().transform.position.y < Camera.main.transform.position.y - Constant.SCENE_HEIGHT / 2) {
+			//删除队首
+			Platform peak = platforms.Dequeue ();
+			peak.destrySkin ();
+			Destroy (peak.gameObject);
 		}
 	}
 }

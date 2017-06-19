@@ -57,7 +57,7 @@ public class Doodle : MonoBehaviour
 	void Update ()
 	{
 		//判定Doodle离开摄像机下方
-		if (this.transform.position.y < Camera.main.transform.position.y - 4f) {
+		if (this.transform.position.y < Camera.main.transform.position.y - Constant.SCENE_HEIGHT / 2) {
 			GameManager.INSTANCE.isGaming = false;
 		}
 		updatePosition ();

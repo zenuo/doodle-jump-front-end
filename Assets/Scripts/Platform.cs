@@ -73,4 +73,9 @@ public class Platform : MonoBehaviour {
 		skin = skinGameObject.transform;
 		skin.SetParent (parent.transform);
 	}
+
+	public void destrySkin()
+	{
+		Destroy (skin.gameObject);
+	}
 }

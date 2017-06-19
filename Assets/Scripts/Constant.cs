@@ -10,7 +10,7 @@ public class Constant : MonoBehaviour {
 	public const float G = -11f;
 
 	//Doodle水平移动速度
-	public const float X_VELOCITY_OF_DOODLE = 2.2f;
+	public const float X_VELOCITY_OF_DOODLE = 2.5f;
 
 	//Doodle缩放比例
 	public const float SCALING_OF_DOODLE = 0.65f;
