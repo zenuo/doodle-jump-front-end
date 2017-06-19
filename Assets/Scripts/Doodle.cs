@@ -100,15 +100,15 @@ public class Doodle : MonoBehaviour
 			Camera.main.transform.transform.Translate (new Vector3 (0f, yDifferenceOfDoodleAndCamera, 0f));
 		}
 		//Doodle超出左边界
-		if (this.transform.position.x < -2.8f) {
-			translation.x = 5.6f;
+		if (this.transform.position.x < -Constant.SCENE_WIDTH / 2) {
+			translation.x = Constant.SCENE_WIDTH;
 			translation.y = 0f;
 			this.transform.Translate (translation);
 			return;
 		}
 		//Doodle超出右边界
-		if (this.transform.position.x > 2.8f) {
-			translation.x = -5.6f;
+		if (this.transform.position.x > Constant.SCENE_WIDTH / 2) {
+			translation.x = -Constant.SCENE_WIDTH;
 			translation.y = 0f;
 			this.transform.Translate (translation);
 			return;
