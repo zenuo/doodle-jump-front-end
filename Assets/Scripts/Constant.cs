@@ -10,7 +10,7 @@ public class Constant : MonoBehaviour {
 	public const float G = -11f;
 
 	//Doodle水平移动速度
-	public const float X_VELOCITY_OF_DOODLE = 2.5f;
+	public const float X_VELOCITY_OF_DOODLE = 3f;
 
 	//Doodle缩放比例
 	public const float SCALING_OF_DOODLE = 0.65f;
@@ -23,4 +23,13 @@ public class Constant : MonoBehaviour {
 
 	//场景宽度
 	public const float SCENE_WIDTH = 5.6f;
+
+	//队列维护platform数量
+	public const int NUMBER_OF_PLATFORMS_QUEUE = 6;
+
+	//不稳定的地面竖直移动速度
+	public const float Y_VELOCITY_OF_UNSTABLE_PLATFORM = -0.8f;
+
+	//移动的地面的移动速度
+	public const float VELOCITY_OF_MOVING_PLATFORM = 0.5f;
 }

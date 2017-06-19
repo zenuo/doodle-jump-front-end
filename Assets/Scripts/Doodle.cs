@@ -7,12 +7,12 @@ using UnityEngine;
  */
 public class Doodle : MonoBehaviour
 {
-	//静态变量
-	public static Doodle INSTANCE;
+	//类型
+	public int type;
 
 	//初始速度
 	const float initialXVelocity = 0f;
-	const float initialYVelocity = 6f;
+	const float initialYVelocity = 8f;
 
 	//速度
 	float xVelocity;
@@ -42,15 +42,8 @@ public class Doodle : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		INSTANCE = this;
 		xVelocity = initialXVelocity;
 		yVelocity = initialYVelocity;
-
-		//皮肤
-		GameObject skinPrefab = Resources.Load<GameObject> ("doodle/" + GameManager.INSTANCE.doodleSkinName);
-		GameObject skinGameObject = Instantiate <GameObject> (skinPrefab);
-		skin = skinGameObject.transform;
-		skin.SetParent (this.transform);
 	}
 	
 	// Update is called once per frame
@@ -64,6 +57,7 @@ public class Doodle : MonoBehaviour
 		updateSkin ();
 	}
 
+	//更新皮肤
 	void updateSkin ()
 	{
 		bool isLeftKeyDown = Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow);
@@ -83,9 +77,9 @@ public class Doodle : MonoBehaviour
 	//改变皮肤方向
 	void changeSkinDirection()
 	{
-		Vector3 scale = skin.transform.localScale;
+		Vector3 scale = this.skin.localScale;
 		scale.x *= -1;
-		skin.transform.localScale = scale;
+		this.skin.localScale = scale;
 	}
 
 	//更新位置
@@ -174,5 +168,71 @@ public class Doodle : MonoBehaviour
 		isUsingProp = false;
 		propVelocity = 0f;
 		propTime = 0f;
+	}
+
+	//创建Doodle
+	public static Doodle create (int type)
+	{
+		//创建doodle
+		GameObject doodlePrefab = Resources.Load<GameObject> ("Doodle");
+		GameObject doodleObject = Instantiate<GameObject> (doodlePrefab);
+		Doodle doodle = doodleObject.AddComponent<Doodle> ();
+		doodle.type = type;
+		doodle.setSkin (doodleObject);
+		return doodle;
+	}
+
+	//设置皮肤
+	public void setSkin(GameObject doodleObject)
+	{
+		//皮肤
+		GameObject skinPrefab = Resources.Load<GameObject> ("doodle/" + getSkinName ());
+		GameObject skinGameObject = Instantiate <GameObject> (skinPrefab);
+		this.skin = skinGameObject.transform;
+		this.skin.SetParent (doodleObject.transform);
+	}
+
+	//获取皮肤名称
+	string getSkinName()
+	{
+		switch (type)
+		{
+		case 0:
+			return "bunny";
+			break;
+		case 1:
+			return "christmas";
+			break;
+		case 2:
+			return "doodlestein";
+			break;
+		case 3:
+			return "ghost";
+			break;
+		case 4:
+			return "ice";
+			break;
+		case 5:
+			return "jungle";
+			break;
+		case 6:
+			return "ninja";
+			break;
+		case 7:
+			return "normal";
+			break;
+		case 8:
+			return "soccer";
+			break;
+		case 9:
+			return "space";
+			break;
+		case 10:
+			return "underwater";
+			break;
+		default:
+			return "normal";
+			break;
+		}
 	}
 }

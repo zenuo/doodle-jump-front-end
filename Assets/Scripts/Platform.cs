@@ -6,24 +6,26 @@ public class Platform : MonoBehaviour {
 	//类型
 	public int type = 0;
 
-	//速度
-	public float xV = 0f;
-	public float yV = 0f;
-
 	//道具
 	public int propId = 0;
 
 	//皮肤
 	Transform skin;
 
+	//运动
+	Vector3 translation = new Vector3();
+
+	//被触发
+	public bool isTriggered = false;
+
 	// Use this for initialization
 	void Start () {
-
+		this.GetComponent <BoxCollider2D> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		updatePosition ();
 	}
 
 	//获取名称字符串
@@ -47,16 +49,16 @@ public class Platform : MonoBehaviour {
 	}
 
 	//创建platform
-	public static Platform create(int type, float xV, float yV, Vector3 position)
+	public static Platform create(int type, Vector3 position)
 	{
 		GameObject platformPrefab = Resources.Load<GameObject> ("Platform");
 		GameObject platformObject = Instantiate<GameObject> (
 			platformPrefab,
 			position,
 			Quaternion.identity);
+		
 		Platform platform = platformObject.AddComponent<Platform> ();
-		platform.xV = xV;
-		platform.yV = yV;
+		platform.type = type;
 		platform.setSkin (type, platformObject, position);
 		return platform;
 	}
@@ -74,8 +76,50 @@ public class Platform : MonoBehaviour {
 		skin.SetParent (parent.transform);
 	}
 
-	public void destrySkin()
+	//销毁皮肤
+	public void destroySkin()
 	{
 		Destroy (skin.gameObject);
+	}
+
+	//碰撞后的处理
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		//如果被玩家碰撞
+		if (other.tag.Equals ("Player")) {
+			isTriggered = true;	
+		}
+	}
+
+	//更新位置
+	void updatePosition()
+	{
+		//超出左边界
+		if (this.transform.position.x < -Constant.SCENE_WIDTH / 2) {
+			translation.x = Constant.SCENE_WIDTH;
+			translation.y = 0f;
+			this.transform.Translate (translation);
+			return;
+		}
+		//超出右边界
+		if (this.transform.position.x > Constant.SCENE_WIDTH / 2) {
+			translation.x = -Constant.SCENE_WIDTH;
+			translation.y = 0f;
+			this.transform.Translate (translation);
+			return;
+		}
+		if (type == 0) {
+			return;
+		} else if (type == 1) {
+			translation.x = Constant.VELOCITY_OF_MOVING_PLATFORM * Time.deltaTime;
+			translation.y = 0f;
+			this.transform.Translate (translation);
+			return;
+		} else if (type == 2 && isTriggered) {
+			translation.x = 0f;
+			translation.y = Constant.Y_VELOCITY_OF_UNSTABLE_PLATFORM * Time.deltaTime;
+			this.transform.Translate (translation);
+			return;
+		}
 	}
 }
