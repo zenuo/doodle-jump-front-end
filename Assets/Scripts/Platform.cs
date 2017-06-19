@@ -10,10 +10,6 @@ public class Platform : MonoBehaviour {
 	public float xV = 0f;
 	public float yV = 0f;
 
-	//位置
-	public float xP = 0f;
-	public float yP = 0f;
-
 	//道具
 	public int propId = 0;
 
@@ -22,12 +18,7 @@ public class Platform : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-		//皮肤
-		GameObject skinPrefab = Resources.Load<GameObject> ("platform/" + getName ());
-		GameObject skinGameObject = Instantiate <GameObject> (skinPrefab);
-		skin = skinGameObject.transform;
-		skin.SetParent (this.transform);
+
 	}
 	
 	// Update is called once per frame
@@ -35,7 +26,8 @@ public class Platform : MonoBehaviour {
 		
 	}
 
-	string getName()
+	//获取名称字符串
+	string getName(int type)
 	{
 		switch (type)
 		{
@@ -52,5 +44,33 @@ public class Platform : MonoBehaviour {
 			return "stable";
 			break;
 		}
+	}
+
+	//创建platform
+	public static Platform create(int type, float xV, float yV, Vector3 position)
+	{
+		GameObject platformPrefab = Resources.Load<GameObject> ("Platform");
+		GameObject platformObject = Instantiate<GameObject> (
+			platformPrefab,
+			position,
+			Quaternion.identity);
+		Platform platform = platformObject.AddComponent<Platform> ();
+		platform.xV = xV;
+		platform.yV = yV;
+		platform.setSkin (type, platformObject, position);
+		return platform;
+	}
+
+	//设置皮肤
+	public void setSkin(int type, GameObject parent, Vector3 position)
+	{
+		//皮肤
+		GameObject skinPrefab = Resources.Load<GameObject> ("platform/" + getName (type));
+		GameObject skinGameObject = Instantiate <GameObject> (
+			skinPrefab,
+			position,
+			Quaternion.identity);
+		skin = skinGameObject.transform;
+		skin.SetParent (parent.transform);
 	}
 }

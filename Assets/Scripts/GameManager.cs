@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	public string doodleSkinName;
 
 	//platform队列
-	Queue<Transform> platforms = new Queue<Transform>();
+	Queue<Platform> platforms = new Queue<Platform>();
 	//platfrom位置
 	Vector3 platformPosition = new Vector3();
 	//字符串
@@ -41,16 +41,11 @@ public class GameManager : MonoBehaviour {
 		if (platforms.Count <= 6) {
 			//设置platform位置
 			platformPosition.x = Random.value * Constant.SCENE_WIDTH / 2;
+			Debug.Log (platformPosition.x);
 			platformPosition.y += Constant.VERTICAL_DISTANCE_BETWEEN_PLATFORMS;
 			//加载一个platform的prefab
-			GameObject platformPrefab = Resources.Load<GameObject> ("Platform");
-			GameObject platformObject = Instantiate<GameObject> (
-				platformPrefab,
-				platformPosition,
-				Quaternion.identity);
-			Platform platform = platformObject.GetComponent<Platform> ();
-			Debug.Log (platform.xP);
-			platforms.Enqueue (platformObject.transform);
+			Platform platform = Platform.create (0, 0, 0, platformPosition);
+			platforms.Enqueue (platform);
 		}
 	}
 }
