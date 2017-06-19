@@ -7,7 +7,7 @@ using UnityEngine;
  */
 public class Constant : MonoBehaviour {
 	//重力加速度
-	public const float G = -10f;
+	public const float G = -11f;
 
 	//Doodle水平移动速度
 	public const float X_VELOCITY_OF_DOODLE = 2.2f;

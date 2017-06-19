@@ -9,10 +9,17 @@ public class GameManager : MonoBehaviour {
 	//游戏是否正常运行
 	public bool isGaming = true;
 
+	//Doodle
+	GameObject doodle;
+
+	public string doodleSkinName;
 
 	// Use this for initialization
 	void Start () {
 		INSTANCE = this;
+		GameObject doodlePrefab = Resources.Load<GameObject> ("Doodle");
+		doodle = Instantiate<GameObject> (doodlePrefab);
+		doodleSkinName = "ninja";
 	}
 	
 	// Update is called once per frame

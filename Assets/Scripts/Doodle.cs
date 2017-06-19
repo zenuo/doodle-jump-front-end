@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 /*
  * Doodle控制
  */
@@ -11,7 +12,7 @@ public class Doodle : MonoBehaviour
 
 	//初始速度
 	const float initialXVelocity = 0f;
-	const float initialYVelocity = 5f;
+	const float initialYVelocity = 6f;
 
 	//速度
 	float xVelocity;
@@ -32,12 +33,24 @@ public class Doodle : MonoBehaviour
 	//Doodle与摄像机y坐标的差值
 	float yDifferenceOfDoodleAndCamera = 0f;
 
+	//皮肤
+	Transform skin;
+
+	//方向
+	bool isRight = true;
+
 	// Use this for initialization
 	void Start ()
 	{
 		INSTANCE = this;
 		xVelocity = initialXVelocity;
 		yVelocity = initialYVelocity;
+
+		//皮肤
+		GameObject skinPrefab = Resources.Load<GameObject> ("doodle/" + GameManager.INSTANCE.doodleSkinName);
+		GameObject skinGameObject = Instantiate <GameObject> (skinPrefab);
+		skin = skinGameObject.transform;
+		skin.SetParent (this.transform);
 	}
 	
 	// Update is called once per frame
@@ -47,11 +60,36 @@ public class Doodle : MonoBehaviour
 		if (this.transform.position.y < Camera.main.transform.position.y - 4f) {
 			GameManager.INSTANCE.isGaming = false;
 		}
-		UpdatePosition ();
+		updatePosition ();
+		updateSkin ();
+	}
+
+	void updateSkin ()
+	{
+		bool isLeftKeyDown = Input.GetKeyDown (KeyCode.A) || Input.GetKeyDown (KeyCode.LeftArrow);
+		bool isRightKeyDown = Input.GetKeyDown (KeyCode.D) || Input.GetKeyDown (KeyCode.RightArrow);
+
+		if (isRight && isLeftKeyDown) {
+			//当前方向右且左键按下
+			isRight = false;
+			changeSkinDirection ();
+		} else if (!isRight && isRightKeyDown) {
+			//当前方向不向右且右键按下
+			isRight = true;
+			changeSkinDirection ();
+		}
+	}
+
+	//改变皮肤方向
+	void changeSkinDirection()
+	{
+		Vector3 scale = skin.transform.localScale;
+		scale.x *= -1;
+		skin.transform.localScale = scale;
 	}
 
 	//更新位置
-	void UpdatePosition ()
+	void updatePosition ()
 	{
 		translation.x = Time.deltaTime * getXVelocity ();
 		translation.y = Time.deltaTime * getYVelocity ();
@@ -59,7 +97,7 @@ public class Doodle : MonoBehaviour
 		//更新摄像机y坐标
 		yDifferenceOfDoodleAndCamera = this.transform.position.y - Camera.main.transform.transform.position.y;
 		if (yDifferenceOfDoodleAndCamera > 0f) {
-			Camera.main.transform.transform.Translate (new Vector3(0f, yDifferenceOfDoodleAndCamera, 0f));
+			Camera.main.transform.transform.Translate (new Vector3 (0f, yDifferenceOfDoodleAndCamera, 0f));
 		}
 		//Doodle超出左边界
 		if (this.transform.position.x < -2.8f) {
@@ -100,10 +138,14 @@ public class Doodle : MonoBehaviour
 	//获得水平速度
 	float getXVelocity ()
 	{
-		if (Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) {
+		bool isLeftKey = Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow);
+		bool isRightKey = Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow);
+		if (isLeftKey) {
+			//左键被按下
 			return -Constant.X_VELOCITY_OF_DOODLE;
 		}
-		if (Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {
+		if (isRightKey) {
+			//右键被按下
 			return Constant.X_VELOCITY_OF_DOODLE;
 		}
 		return 0f;
