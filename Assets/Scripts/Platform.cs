@@ -12,6 +12,9 @@ public class Platform : MonoBehaviour {
 	//皮肤
 	Transform skin;
 
+	//道具
+	Transform prop;
+
 	//运动
 	Vector3 translation = new Vector3();
 
@@ -20,7 +23,7 @@ public class Platform : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.GetComponent <BoxCollider2D> ();
+		
 	}
 	
 	// Update is called once per frame
@@ -35,16 +38,12 @@ public class Platform : MonoBehaviour {
 		{
 		case 0:
 			return "stable";
-			break;
 		case 1:
 			return "moving";
-			break;
 		case 2:
 			return "unstable";
-			break;
 		default:
 			return "stable";
-			break;
 		}
 	}
 

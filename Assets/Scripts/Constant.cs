@@ -5,7 +5,7 @@ using UnityEngine;
 /*
  *常量类
  */
-public class Constant : MonoBehaviour {
+public class Constant {
 	//重力加速度
 	public const float G = -11f;
 
@@ -32,4 +32,7 @@ public class Constant : MonoBehaviour {
 
 	//移动的地面的移动速度
 	public const float VELOCITY_OF_MOVING_PLATFORM = 0.5f;
+
+	//主机地址
+	public const string HOST = "http://127.0.0.1:8080/";
 }

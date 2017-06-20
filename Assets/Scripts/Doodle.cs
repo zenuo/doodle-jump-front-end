@@ -107,6 +107,11 @@ public class Doodle : MonoBehaviour
 			this.transform.Translate (translation);
 			return;
 		}
+
+		//更新分数
+		if (this.transform.position.y > GameManager.INSTANCE.score) {
+			GameManager.INSTANCE.score = (int)this.transform.position.y;
+		}
 	}
 
 	//获取竖直速度
@@ -146,9 +151,9 @@ public class Doodle : MonoBehaviour
 	}
 
 	//碰撞检测
-	void OnTriggerEnter2D ()
+	void OnTriggerEnter2D (Collider2D other)
 	{
-		if (!isUsingProp) {
+		if (!isUsingProp && other.tag.Equals ("Platform")) {
 			xVelocity = initialXVelocity;
 			yVelocity = initialYVelocity;
 		}
@@ -199,40 +204,28 @@ public class Doodle : MonoBehaviour
 		{
 		case 0:
 			return "bunny";
-			break;
 		case 1:
 			return "christmas";
-			break;
 		case 2:
 			return "doodlestein";
-			break;
 		case 3:
 			return "ghost";
-			break;
 		case 4:
 			return "ice";
-			break;
 		case 5:
 			return "jungle";
-			break;
 		case 6:
 			return "ninja";
-			break;
 		case 7:
 			return "normal";
-			break;
 		case 8:
 			return "soccer";
-			break;
 		case 9:
 			return "space";
-			break;
 		case 10:
 			return "underwater";
-			break;
 		default:
 			return "normal";
-			break;
 		}
 	}
 }
