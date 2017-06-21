@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Platform : MonoBehaviour {
+public class Platform : MonoBehaviour
+{
 	//类型
 	public int type = 0;
 
@@ -16,26 +17,22 @@ public class Platform : MonoBehaviour {
 	Transform prop;
 
 	//运动
-	Vector3 translation = new Vector3();
+	Vector3 translation = new Vector3 ();
 
 	//被触发
 	public bool isTriggered = false;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		updatePosition ();
+	void Update ()
+	{
+		if (GameManager.INSTANCE.isGaming) {
+			updatePosition ();
+		}
 	}
 
 	//获取名称字符串
-	string getName(int type)
+	string getName (int type)
 	{
-		switch (type)
-		{
+		switch (type) {
 		case 0:
 			return "stable";
 		case 1:
@@ -48,41 +45,45 @@ public class Platform : MonoBehaviour {
 	}
 
 	//创建platform
-	public static Platform create(int type, Vector3 position)
+	public static Platform create (int type, Vector3 position)
 	{
 		GameObject platformPrefab = Resources.Load<GameObject> ("Platform");
 		GameObject platformObject = Instantiate<GameObject> (
-			platformPrefab,
-			position,
-			Quaternion.identity);
+			                            platformPrefab,
+			                            position,
+			                            Quaternion.identity);
 		
 		Platform platform = platformObject.AddComponent<Platform> ();
+		//设置父对象为gaming面板
+		platform.transform.SetParent (UIManager.INSTANCE.gaming);
 		platform.type = type;
 		platform.setSkin (type, platformObject, position);
 		return platform;
 	}
 
 	//设置皮肤
-	public void setSkin(int type, GameObject parent, Vector3 position)
+	public void setSkin (int type, GameObject parent, Vector3 position)
 	{
 		//皮肤
 		GameObject skinPrefab = Resources.Load<GameObject> ("platform/" + getName (type));
 		GameObject skinGameObject = Instantiate <GameObject> (
-			skinPrefab,
-			position,
-			Quaternion.identity);
+			                            skinPrefab,
+			                            position,
+			                            Quaternion.identity);
 		skin = skinGameObject.transform;
 		skin.SetParent (parent.transform);
 	}
 
+
+
 	//销毁皮肤
-	public void destroySkin()
+	public void destroySkin ()
 	{
 		Destroy (skin.gameObject);
 	}
 
 	//碰撞后的处理
-	void OnTriggerEnter2D(Collider2D other)
+	void OnTriggerEnter2D (Collider2D other)
 	{
 		//如果被玩家碰撞
 		if (other.tag.Equals ("Player")) {
@@ -91,7 +92,7 @@ public class Platform : MonoBehaviour {
 	}
 
 	//更新位置
-	void updatePosition()
+	void updatePosition ()
 	{
 		//超出左边界
 		if (this.transform.position.x < -Constant.SCENE_WIDTH / 2) {

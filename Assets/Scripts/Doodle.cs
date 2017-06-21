@@ -39,22 +39,23 @@ public class Doodle : MonoBehaviour
 	//方向
 	bool isRight = true;
 
-	// Use this for initialization
 	void Start ()
 	{
 		xVelocity = initialXVelocity;
 		yVelocity = initialYVelocity;
 	}
-	
-	// Update is called once per frame
+
 	void Update ()
 	{
-		//判定Doodle离开摄像机下方
-		if (this.transform.position.y < Camera.main.transform.position.y - Constant.SCENE_HEIGHT / 2) {
-			GameManager.INSTANCE.isGaming = false;
+		if (GameManager.INSTANCE.isGaming) {
+			//判定Doodle离开摄像机下方
+			if (this.transform.position.y < Camera.main.transform.position.y - Constant.SCENE_HEIGHT / 2) {
+				GameManager.INSTANCE.isGaming = false;
+				UIManager.INSTANCE.loadGameOver ();
+			}
+			updatePosition ();
+			updateSkin ();
 		}
-		updatePosition ();
-		updateSkin ();
 	}
 
 	//更新皮肤
@@ -184,6 +185,7 @@ public class Doodle : MonoBehaviour
 		Doodle doodle = doodleObject.AddComponent<Doodle> ();
 		doodle.type = type;
 		doodle.setSkin (doodleObject);
+		doodle.transform.SetParent (UIManager.INSTANCE.gaming);
 		return doodle;
 	}
 
@@ -198,31 +200,31 @@ public class Doodle : MonoBehaviour
 	}
 
 	//获取皮肤名称
-	string getSkinName()
+	public static string getSkinName()
 	{
-		switch (type)
+		switch (GameManager.INSTANCE.doodleType)
 		{
-		case 0:
-			return "bunny";
 		case 1:
-			return "christmas";
+			return "bunny";
 		case 2:
-			return "doodlestein";
+			return "christmas";
 		case 3:
-			return "ghost";
+			return "doodlestein";
 		case 4:
-			return "ice";
+			return "ghost";
 		case 5:
-			return "jungle";
+			return "ice";
 		case 6:
-			return "ninja";
+			return "jungle";
 		case 7:
-			return "normal";
+			return "ninja";
 		case 8:
-			return "soccer";
+			return "normal";
 		case 9:
-			return "space";
+			return "soccer";
 		case 10:
+			return "space";
+		case 11:
 			return "underwater";
 		default:
 			return "normal";

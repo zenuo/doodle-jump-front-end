@@ -6,17 +6,32 @@ public class GameManager : MonoBehaviour {
 	//静态实例
 	public static GameManager INSTANCE;
 
-	//用户信息
+	//Canvas实例
+	public GameObject canvas;
+
+	//玩家信息
 	public PlayerInfo playerInfo;
 
+	//玩家状态
+	public PlayerStatus playerStatus;
+
+	//同一队伍的玩家的状态
+	public PlayerStatus[] playerStatuses;
+
+	//玩家人数
+	public int playerNum = 1;
+
 	//游戏是否正常运行
-	public bool isGaming = true;
+	public bool isGaming;
 
 	//会话id
 	public string sessionId;
 
-	//Doodle
+	//Doodle实例
 	public Doodle doodle;
+
+	//Doodle类型
+	public int doodleType;
 
 	//platform队列
 	Queue<Platform> platforms = new Queue<Platform>();
@@ -30,11 +45,20 @@ public class GameManager : MonoBehaviour {
 	//分数
 	public int score = 0;
 
-	// Use this for initialization
-	void Start () {
+	void Awake()
+	{
 		INSTANCE = this;
-		doodle = Doodle.create (4);
+		canvas = (GameObject)GameObject.Find ("Canvas");
+		isGaming = false;
+	}
+
+	void Start () {
+		//加载欢迎界面
+		UIManager.INSTANCE.loadWelcome();
+
 		/*
+		doodle = Doodle.create (doodleType);
+		playerNum = 3;
 		sessionId = HTTPUtil.signIn ("yz", "123456");
 		Debug.Log (sessionId);
 		PLAYERINFO = HTTPUtil.getPlayerInfo ();
@@ -46,10 +70,11 @@ public class GameManager : MonoBehaviour {
 		Debug.Log (HTTPUtil.getMessage ().Length);
 		*/
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
-		spawnPlatform ();
+		if (isGaming) {
+			spawnPlatform ();
+		}
 	}
 
 	// 创建platform
@@ -71,5 +96,11 @@ public class GameManager : MonoBehaviour {
 			peak.destroySkin ();
 			Destroy (peak.gameObject);
 		}
+	}
+
+	//更新状态
+	void pushStatus()
+	{
+		playerStatus.text ();
 	}
 }

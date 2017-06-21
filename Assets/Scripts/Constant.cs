@@ -35,4 +35,5 @@ public class Constant {
 
 	//主机地址
 	public const string HOST = "http://127.0.0.1:8080/";
+
 }
