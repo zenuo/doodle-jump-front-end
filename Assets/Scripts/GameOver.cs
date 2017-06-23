@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOver : MonoBehaviour {
+public class GameOver : MonoBehaviour
+{
 
 	public Button cancle;
 
@@ -11,30 +12,51 @@ public class GameOver : MonoBehaviour {
 
 	public Text text;
 
-	void Start () {
-		Button cancleBtn = cancle.GetComponent<Button> ();
-		cancleBtn.onClick.AddListener (CancleTask);
+	void Start ()
+	{
+		GameManager.INSTANCE.isGaming = false;
 
-		Button againBtn = again.GetComponent<Button> ();
-		againBtn.onClick.AddListener (AgainTask);
+		cancle.onClick.AddListener (CancleTask);
 
-		UIManager.INSTANCE.DisActiveGaming ();
+		again.onClick.AddListener (AgainTask);
+
+		//重置摄像机位置
+		Camera.main.transform.Translate (
+			Constant.INITICAL_POSITION_OF_CAMERA
+			-
+			Camera.main.transform.position
+		);
+
+		//清空地面队列
+		GameManager.INSTANCE.platformQueue.Clear ();
+
+		//销毁对象
+		Destroy (UIManager.INSTANCE.gaming.gameObject);
+		Destroy (UIManager.INSTANCE.panel1.gameObject);
+		Destroy (UIManager.INSTANCE.avator1.gameObject);
+		if (GameManager.INSTANCE.playerNum >= 2) {
+			Destroy (UIManager.INSTANCE.panel2.gameObject);
+			Destroy (UIManager.INSTANCE.avator2.gameObject);
+		}
+		if (GameManager.INSTANCE.playerNum == 3) {
+			Destroy (UIManager.INSTANCE.panel3.gameObject);
+			Destroy (UIManager.INSTANCE.avator3.gameObject);
+		}
 	}
 
-	void AgainTask()
+	void AgainTask ()
 	{
 		Debug.Log ("GameOver: Again");
-		UIManager.INSTANCE.gameover.gameObject.SetActive (false);
 		GameManager.INSTANCE.isGaming = true;
 		GameManager.INSTANCE.doodle = Doodle.create (GameManager.INSTANCE.doodleType);
 		UIManager.INSTANCE.loadGaming ();
-		UIManager.INSTANCE.loadPlayerPanel ();
 	}
 
-	void CancleTask()
+	void CancleTask ()
 	{
 		Debug.Log ("GameOver: Cancle");
 		UIManager.INSTANCE.gameover.gameObject.SetActive (false);
 		UIManager.INSTANCE.welcome.gameObject.SetActive (true);
+		UIManager.INSTANCE.loadGaming ();
 	}
 }

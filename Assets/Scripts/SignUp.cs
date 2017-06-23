@@ -18,11 +18,9 @@ public class SignUp : MonoBehaviour {
 	public InputField passwordInput;
 
 	void Start () {
-		Button signUpBtn = signUp.GetComponent<Button> ();
-		signUpBtn.onClick.AddListener (SignUpTask);
+		signUp.onClick.AddListener (SignUpTask);
 
-		Button cancleBtn = cancle.GetComponent<Button> ();
-		cancleBtn.onClick.AddListener (CancleTask);
+		cancle.onClick.AddListener (CancleTask);
 	}
 
 	void SignUpTask()

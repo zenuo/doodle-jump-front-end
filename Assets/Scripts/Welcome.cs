@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using LitJson;
 
 public class Welcome : MonoBehaviour
 {
@@ -12,13 +13,10 @@ public class Welcome : MonoBehaviour
 
 	void Start ()
 	{
-		Button signUpBtn = signUp.GetComponent<Button> ();
-		signUpBtn.onClick.AddListener (SignUpTask);
+		signUp.onClick.AddListener (SignUpTask);
 
-		Button signInBtn = signIn.GetComponent<Button> ();
-		signInBtn.onClick.AddListener (SignInTask);
+		signIn.onClick.AddListener (SignInTask);
 
-		Button offlineBtn = offline.GetComponent<Button> ();
 		offline.onClick.AddListener (offlineTask);
 	}
 
@@ -40,8 +38,7 @@ public class Welcome : MonoBehaviour
 	{
 		Debug.Log ("Welcome: Offline");
 		UIManager.INSTANCE.welcome.gameObject.SetActive (false);
-
-		//GameManager.INSTANCE.doodleType = 2;
+		GameManager.INSTANCE.gameStatus = Constant.GAME_OFFLINE;
 		UIManager.INSTANCE.loadChooseSkin ();
 	}
 }

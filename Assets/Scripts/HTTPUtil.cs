@@ -7,33 +7,37 @@ using System.IO;
 using System.Collections.Specialized;
 using System.Text;
 
-public class HTTPUtil {
+public class HTTPUtil
+{
 	//POST表单并返回相应信息
-	public static string POSTForm(string URL, NameValueCollection formData)
+	public static string POSTForm (string URL, NameValueCollection formData)
 	{
+		Debug.Log ("POSTForm " + URL);
 		WebClient client = new WebClient ();
 		byte[] response = client.UploadValues (URL, formData);
 		return Encoding.UTF8.GetString (response);
 	}
 
-	//POST字符串并返回响应信息
-	public static string POSTString(string URL, string stringData)
+	//POST对象json并返回响应信息
+	public static string POSTJson (string URL, string stringData)
 	{
+		Debug.Log ("POSTJson " + URL);
 		WebClient client = new WebClient ();
 		client.Headers.Set ("Content-Type", "application/json");
 		byte[] response = client.UploadData (URL, Encoding.UTF8.GetBytes (stringData));
 		return Encoding.UTF8.GetString (response);
 	}
 
-	public static string GET(String URL)
+	public static string GET (String URL)
 	{
+		Debug.Log ("GET: " + URL);
 		return new WebClient ().DownloadString (URL);
 	}
 
 	//注册
-	public static string signUp(string name, string password, string bio, string email)
+	public static string signUp (string name, string password, string bio, string email)
 	{
-		NameValueCollection formData = new NameValueCollection();
+		NameValueCollection formData = new NameValueCollection ();
 		formData.Add ("name", name);
 		formData.Add ("password", password);
 		formData.Add ("bio", bio);
@@ -42,77 +46,145 @@ public class HTTPUtil {
 	}
 
 	//登录
-	public static string signIn(string name, string password)
+	public static string signIn (string name, string password)
 	{
-		NameValueCollection formData = new NameValueCollection();
+		NameValueCollection formData = new NameValueCollection ();
 		formData.Add ("name", name);
 		formData.Add ("password", password);
 		return POSTForm (Constant.HOST + "auth/signin", formData);
 	}
 
 	//登出
-	public static string signOut()
+	public static string signOut ()
 	{
 		return GET (string.Format ("{0}auth/signout?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId));
 	}
 
 	//获得玩家信息
-	public static PlayerInfo getPlayerInfo()
+	public static PlayerInfo getPlayerInfo ()
 	{
 		string jsonString = GET (string.Format ("{0}auth/info?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId));
 		return PlayerInfo.createFromJosn (jsonString);
 	}
 
 	//发送信息
-	public static int sendMessage(Message message)
+	public static int sendMessage (Message message)
 	{
-		return int.Parse (POSTString (
+		return int.Parse (POSTJson (
 			string.Format ("{0}message/send-{1}", Constant.HOST, GameManager.INSTANCE.sessionId),
 			message.text ()
 		));
 	}
 
 	//获取信息
-	public static Message[] getMessage()
+	public static Message[] getMessage ()
 	{
 		string jsonString = GET (
-			string.Format ("{0}message/get?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId)
-		);
+			                    string.Format ("{0}message/get?session={1}",
+				                    Constant.HOST,
+				                    GameManager.INSTANCE.sessionId)
+		                    );
 		return JsonHelper.getJsonArray<Message> (jsonString);
 	}
 
 	//获取队伍列表
-	public static Team[] getTeamlist()
+	public static TeamDTO[] listTeam ()
 	{
 		string jsonString = GET (
-			string.Format ("{0}team/list", Constant.HOST)
-		);
-		return JsonHelper.getJsonArray<Team> (jsonString);
+			                    string.Format ("{0}team/list?session={1}",
+				                    Constant.HOST,
+				                    GameManager.INSTANCE.sessionId)
+		                    );
+
+		return JsonHelper.getJsonArray<TeamDTO> (jsonString);
 	}
 
 	//创建队伍
-	public static void createTeam()
+	public static Team createTeam ()
 	{
-		GET (string.Format ("{0}team/create?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId));
+		string jsonString = GET (
+			                    string.Format ("{0}team/create?session={1}&avator={2}&coin={3}",
+				                    Constant.HOST,
+				                    GameManager.INSTANCE.sessionId,
+				                    GameManager.INSTANCE.doodleType,
+				                    GameManager.INSTANCE.playerInfo.coin
+			                    )
+		                    );
+		return Team.create (jsonString);
 	}
 
-	//更新状态
-	public static int push(){
-		string jsonString = GameManager.INSTANCE.playerStatus.text ();
+	//获取状态
+	public static void pull ()
+	{
+		string jsonString = GET (
+			                    string.Format ("{0}team/pull?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId)
+		                    );
+		GameManager.INSTANCE.playerStatuses = JsonHelper.getJsonArray<PlayerStatus> (jsonString);
+	}
+
+	//上传状态
+	public static void push ()
+	{
+		POSTJson (
+			string.Format ("{0}team/push-{1}", Constant.HOST, GameManager.INSTANCE.sessionId),
+			GameManager.INSTANCE.playerStatus.text ()
+		);
+	}
+
+	//获取地面信息队列
+	public static void getPlatformInfo ()
+	{
+		if (GameManager.INSTANCE.isNeedToLoadPlatformInfoFromServer) {
+			//从服务器加载
+			string responseString = GET (string.Format ("{0}team/platform?session={1}&page={2}", Constant.HOST, GameManager.INSTANCE.sessionId, GameManager.INSTANCE.platfromInfoPage));
+			//增加页数，供下次调用
+			GameManager.INSTANCE.platfromInfoPage++;
+			//拆分responseString为数组
+			string[] tokens = responseString.Split (new string[] { "#" }, StringSplitOptions.None);
+			//遍历数组，入队
+			foreach (string s in tokens) {
+				GameManager.INSTANCE.platformInfoQueue.Enqueue (s);
+			}
+		}
+	}
+
+	public static Team getTeam ()
+	{
+		String jsonString = GET (string.Format (
+			                    "{0}team/get?session={1}&teamId={2}",
+			                    Constant.HOST,
+			                    GameManager.INSTANCE.sessionId,
+			                    GameManager.INSTANCE.team.id
+		                    ));
+		//Debug.Log (jsonString);
+		return JsonUtility.FromJson<Team> (jsonString);
+	}
+
+	public static int joinTeam()
+	{
 		return int.Parse (
-			POSTString (
-				string.Format ("{0}team/push", Constant.HOST),
-				jsonString
+			GET (
+				string.Format (
+					"{0}team/join?session={1}&teamId={2}",
+					Constant.HOST,
+					GameManager.INSTANCE.sessionId,
+					GameManager.INSTANCE.team.id
+				)
 			)
 		);
 	}
 
-	//获取状态
-	public static void pull()
+	public static int lockTeam()
 	{
-		string jsonString = GET (
-			string.Format ("{0}team/pull?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId)
+		return int.Parse (
+			GET (
+				string.Format (
+					"{0}team/lock?session={1}&teamId={2}",
+					Constant.HOST,
+					GameManager.INSTANCE.sessionId,
+					GameManager.INSTANCE.team.id
+				)
+			)
 		);
-		GameManager.INSTANCE.playerStatuses = JsonHelper.getJsonArray<PlayerStatus> (jsonString);
 	}
 }

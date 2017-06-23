@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
 	public Transform gameover;
 	public Transform chooseskin;
 	public Transform gaming;
+	public Transform choosemode;
+	public Transform chooseteam;
+	public Transform teamstatus;
 
 	public Transform panel1;
 	public Text text1;
@@ -26,19 +29,19 @@ public class UIManager : MonoBehaviour
 	public Text text3;
 	public Transform avator3;
 
-	void Awake()
+	void Awake ()
 	{
 		INSTANCE = this;
 	}
 
 	//加载欢迎界面
-	public void loadWelcome()
+	public void loadWelcome ()
 	{
 		if (welcome == null) {
 			GameObject prefab = Resources.Load<GameObject> ("panel/welcome");
 			welcome = Instantiate<GameObject> (
 				prefab,
-				new Vector3 (360f, 512f, 0f),
+				new Vector3 (360F, 512F, 0F),
 				Quaternion.identity
 			).transform;
 			welcome.SetParent (GameManager.INSTANCE.canvas.transform);
@@ -48,13 +51,13 @@ public class UIManager : MonoBehaviour
 	}
 
 	//加载登录界面
-	public void loadSignIn()
+	public void loadSignIn ()
 	{
 		if (signIn == null) {
 			GameObject prefab = Resources.Load<GameObject> ("panel/signIn");
 			signIn = Instantiate<GameObject> (
 				prefab,
-				new Vector3 (360f, 512f, 0f),
+				new Vector3 (360F, 512F, 0F),
 				Quaternion.identity
 			).transform;
 			signIn.SetParent (GameManager.INSTANCE.canvas.transform);
@@ -64,13 +67,13 @@ public class UIManager : MonoBehaviour
 	}
 
 	//加载注册界面
-	public void loadSignUp () 
+	public void loadSignUp ()
 	{
 		if (signUp == null) {
 			GameObject prefab = Resources.Load<GameObject> ("panel/signUp");
 			signUp = Instantiate<GameObject> (
 				prefab,
-				new Vector3 (360f, 512f, 0f),
+				new Vector3 (360F, 512F, 0F),
 				Quaternion.identity
 			).transform;
 			signUp.SetParent (GameManager.INSTANCE.canvas.transform);
@@ -80,29 +83,29 @@ public class UIManager : MonoBehaviour
 	}
 
 	//加载游戏结束界面
-	public void loadGameOver()
+	public void loadGameOver ()
 	{
 		if (gameover == null) {
-			GameObject prefab = Resources.Load <GameObject>("panel/gameover");
+			GameObject prefab = Resources.Load <GameObject> ("panel/gameover");
 			gameover = Instantiate<GameObject> (
 				prefab,
-				new Vector3 (360f, 512f, 0f),
+				new Vector3 (360F, 512F, 0F),
 				Quaternion.identity
 			).transform;
 			gameover.SetParent (GameManager.INSTANCE.canvas.transform);
 		} else {
-			welcome.gameObject.SetActive (true);
+			gameover.gameObject.SetActive (true);
 		}
 	}
 
 	//加载皮肤选择界面
-	public void loadChooseSkin()
+	public void loadChooseSkin ()
 	{
 		if (chooseskin == null) {
-			GameObject prefab = Resources.Load <GameObject>("panel/chooseskin");
+			GameObject prefab = Resources.Load <GameObject> ("panel/chooseskin");
 			chooseskin = Instantiate<GameObject> (
 				prefab,
-				new Vector3(360f, 512f, 0f),
+				new Vector3 (360F, 512F, 0F),
 				Quaternion.identity
 			).transform;
 			chooseskin.SetParent (GameManager.INSTANCE.canvas.transform);
@@ -112,23 +115,69 @@ public class UIManager : MonoBehaviour
 	}
 
 	//加载游戏界面
-	public void loadGaming()
+	public void loadGaming ()
 	{
 		if (gaming == null) {
-			GameObject prefab = Resources.Load <GameObject>("panel/gaming");
+			GameObject prefab = Resources.Load <GameObject> ("panel/gaming");
 			gaming = Instantiate<GameObject> (
 				prefab,
-				new Vector3(360f, 512f, 0f),
+				new Vector3 (360F, 512F, 0F),
 				Quaternion.identity
 			).transform;
 			gaming.SetParent (GameManager.INSTANCE.canvas.transform);
-
 			GameManager.INSTANCE.isGaming = true;
-			Debug.Log (GameManager.INSTANCE.isGaming);
 			GameManager.INSTANCE.doodle = Doodle.create (GameManager.INSTANCE.doodleType);
 			UIManager.INSTANCE.loadPlayerPanel ();
 		} else {
 			gaming.gameObject.SetActive (true);
+		}
+	}
+
+	//加载选择游戏模式
+	public void loadChooseMode ()
+	{
+		if (choosemode == null) {
+			GameObject prefab = Resources.Load<GameObject> ("panel/choosemode");
+			choosemode = Instantiate<GameObject> (
+				prefab,
+				new Vector3 (360F, 512F, 0F),
+				Quaternion.identity
+			).transform;
+			choosemode.SetParent (GameManager.INSTANCE.canvas.transform);
+		} else {
+			choosemode.gameObject.SetActive (true);
+		}
+	}
+
+	//加载选择队伍
+	public void loadChooseTeam ()
+	{
+		if (chooseteam == null) {
+			GameObject prefab = Resources.Load<GameObject> ("panel/chooseteam");
+			chooseteam = Instantiate<GameObject> (
+				prefab,
+				new Vector3 (360F, 512F, 0F),
+				Quaternion.identity
+			).transform;
+			chooseteam.SetParent (GameManager.INSTANCE.canvas.transform);
+		} else {
+			chooseteam.gameObject.SetActive (true);
+		}
+	}
+
+	//已创建的队伍信息
+	public void loadTeamStatus ()
+	{
+		if (teamstatus == null) {
+			GameObject prefab = Resources.Load<GameObject> ("panel/teamstatus");
+			teamstatus = Instantiate<GameObject> (
+				prefab,
+				new Vector3 (360F, 512F, 0F),
+				Quaternion.identity
+			).transform;
+			teamstatus.SetParent (GameManager.INSTANCE.canvas.transform);
+		} else {
+			teamstatus.gameObject.SetActive (true);
 		}
 	}
 
@@ -141,16 +190,16 @@ public class UIManager : MonoBehaviour
 			//生成
 			panel1 = Instantiate<GameObject> (
 				prefab1,
-				new Vector3(120f, 974f, 0f),
+				new Vector3 (120f, 974f, 0f),
 				Quaternion.identity
 			).transform;
 			//设置父对象
 			panel1.transform.SetParent (GameManager.INSTANCE.canvas.transform);
 			text1 = panel1.transform.GetComponentInChildren<Text> ();
 			//头像
-			avator1 = Instantiate<GameObject>(
+			avator1 = Instantiate<GameObject> (
 				Resources.Load<GameObject> ("avator/" + Doodle.getSkinName ()),
-				new Vector3(-2.48f, 7.63f, 0f),
+				new Vector3 (-2.48f, 7.63f, 0f),
 				Quaternion.identity
 			).transform;
 			avator1.transform.SetParent (Camera.main.transform);
@@ -180,16 +229,16 @@ public class UIManager : MonoBehaviour
 				//生成
 				panel3 = Instantiate<GameObject> (
 					prefab3,
-					new Vector3(600, 974f, 0f),
+					new Vector3 (600, 974f, 0f),
 					Quaternion.identity
 				).transform;
 				//设置父对象
 				panel3.transform.SetParent (GameManager.INSTANCE.canvas.transform);
 				text3 = panel3.transform.GetComponentInChildren<Text> ();
 				//头像
-				avator3 = Instantiate<GameObject>(
+				avator3 = Instantiate<GameObject> (
 					Resources.Load<GameObject> ("avator/" + Doodle.getSkinName ()),
-					new Vector3(1.23f, 7.63f, 0f),
+					new Vector3 (1.23f, 7.63f, 0f),
 					Quaternion.identity
 				).transform;
 				avator3.transform.SetParent (Camera.main.transform);
@@ -201,25 +250,13 @@ public class UIManager : MonoBehaviour
 	public void Update ()
 	{
 		if (GameManager.INSTANCE.isGaming) {
-			text1.text = string.Format ("score: {0}\ncoin:{1}\n", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin);
+			text1.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin, GameManager.INSTANCE.life);
 			if (GameManager.INSTANCE.playerNum >= 2) {
-				text2.text = string.Format ("score: {0}\ncoin:{1}\n", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin);
+				text2.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin, GameManager.INSTANCE.life);
 			}
 			if (GameManager.INSTANCE.playerNum >= 2) {
-				text3.text = string.Format ("score: {0}\ncoin:{1}\n", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin);
+				text3.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin, GameManager.INSTANCE.life);
 			}
-		}
-	}
-
-	public void DisActiveGaming()
-	{
-		UIManager.INSTANCE.gaming.gameObject.SetActive (false);
-		UIManager.INSTANCE.avator1.gameObject.SetActive (false);
-		UIManager.INSTANCE.panel1.gameObject.SetActive (false);
-		if (GameManager.INSTANCE.playerNum >= 2) {
-			UIManager.INSTANCE.panel2.gameObject.SetActive (false);
-		} if (GameManager.INSTANCE.playerNum == 3) {
-			UIManager.INSTANCE.panel3.gameObject.SetActive (false);
 		}
 	}
 }

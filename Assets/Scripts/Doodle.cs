@@ -11,27 +11,25 @@ public class Doodle : MonoBehaviour
 	public int type;
 
 	//初始速度
-	const float initialXVelocity = 0f;
-	const float initialYVelocity = 8f;
+	const float initialYVelocity = 8F;
 
 	//速度
-	float xVelocity;
 	float yVelocity;
 
 	//运动
 	Vector3 translation = new Vector3 ();
 
-	//是否处于自控状态
-	bool isUsingProp = false;
+	//是否使用道具
+	public bool isUsingProp = false;
 
 	//道具速度
-	public float propVelocity = 0f;
+	float propVelocity = 0F;
 
 	//道具计时
-	public float propTime = 0f;
+	float propTime = 0F;
 
 	//Doodle与摄像机y坐标的差值
-	float yDifferenceOfDoodleAndCamera = 0f;
+	float yDifferenceOfDoodleAndCamera = 0F;
 
 	//皮肤
 	Transform skin;
@@ -39,20 +37,23 @@ public class Doodle : MonoBehaviour
 	//方向
 	bool isRight = true;
 
+	//水平速度因数
+	float xVelocityFactor = 1F;
+
+	//上一帧是否使用道具
+	bool isLastFrameUsedProp = false;
+
+	//重生计时
+	public float rebrithTimer = -1F;
+
 	void Start ()
 	{
-		xVelocity = initialXVelocity;
 		yVelocity = initialYVelocity;
 	}
 
 	void Update ()
 	{
 		if (GameManager.INSTANCE.isGaming) {
-			//判定Doodle离开摄像机下方
-			if (this.transform.position.y < Camera.main.transform.position.y - Constant.SCENE_HEIGHT / 2) {
-				GameManager.INSTANCE.isGaming = false;
-				UIManager.INSTANCE.loadGameOver ();
-			}
 			updatePosition ();
 			updateSkin ();
 		}
@@ -76,7 +77,7 @@ public class Doodle : MonoBehaviour
 	}
 
 	//改变皮肤方向
-	void changeSkinDirection()
+	void changeSkinDirection ()
 	{
 		Vector3 scale = this.skin.localScale;
 		scale.x *= -1;
@@ -91,20 +92,20 @@ public class Doodle : MonoBehaviour
 		this.transform.Translate (translation);
 		//更新摄像机y坐标
 		yDifferenceOfDoodleAndCamera = this.transform.position.y - Camera.main.transform.transform.position.y;
-		if (yDifferenceOfDoodleAndCamera > 0f) {
-			Camera.main.transform.transform.Translate (new Vector3 (0f, yDifferenceOfDoodleAndCamera, 0f));
+		if (yDifferenceOfDoodleAndCamera > 0F) {
+			Camera.main.transform.transform.Translate (new Vector3 (0F, yDifferenceOfDoodleAndCamera, 0F));
 		}
 		//Doodle超出左边界
-		if (this.transform.position.x < -Constant.SCENE_WIDTH / 2) {
+		if (this.transform.position.x < -Constant.SCENE_WIDTH / 2F) {
 			translation.x = Constant.SCENE_WIDTH;
-			translation.y = 0f;
+			translation.y = 0F;
 			this.transform.Translate (translation);
 			return;
 		}
 		//Doodle超出右边界
-		if (this.transform.position.x > Constant.SCENE_WIDTH / 2) {
+		if (this.transform.position.x > Constant.SCENE_WIDTH / 2F) {
 			translation.x = -Constant.SCENE_WIDTH;
-			translation.y = 0f;
+			translation.y = 0F;
 			this.transform.Translate (translation);
 			return;
 		}
@@ -118,19 +119,37 @@ public class Doodle : MonoBehaviour
 	//获取竖直速度
 	float getYVelocity ()
 	{
+		//判断是否使用道具
 		if (!isUsingProp) {
-			//若没有使用道具
-			yVelocity += Time.deltaTime * Constant.G;
-			return yVelocity;
+			//未使用
+			if (isLastFrameUsedProp) {
+				//未使用道具且上一帧未使用道具
+				isLastFrameUsedProp = false;
+				yVelocity = Constant.VELOCITY_OF_PROP;
+				return Constant.VELOCITY_OF_PROP;
+			} else if (rebrithTimer < 0F) {
+				//Debug.Log ("!isUsingProp && rebrithTimer < 0F");
+				yVelocity += Time.deltaTime * Constant.G;
+				return yVelocity;
+			} else {
+				//处于重生状态
+				//Debug.Log ("rebrithTimer > 0F");
+				rebrithTimer -= Time.deltaTime;
+				return Constant.VELOCITY_OF_PROP;
+			}
 		} else {
-			//若使用道具
-			if ((propTime -= Time.deltaTime) > 0) {
+			//使用道具
+			if ((propTime -= 0.02F) > 0) {
+				//Debug.Log ("(propTime -= 0.02F) > 0");
 				//若道具未失效
+				isLastFrameUsedProp = true;
 				return propVelocity;
 			} else {
 				//若道具失效
+				Debug.Log ("Prop expired.");
 				endUsingProp ();
-				return 0f;
+				//isLastFrameUsedProp = true;
+				return Constant.VELOCITY_OF_PROP;
 			}
 		}
 	}
@@ -142,21 +161,60 @@ public class Doodle : MonoBehaviour
 		bool isRightKey = Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow);
 		if (isLeftKey) {
 			//左键被按下
-			return -Constant.X_VELOCITY_OF_DOODLE;
+			return -Constant.X_VELOCITY_OF_DOODLE * xVelocityFactor;
 		}
 		if (isRightKey) {
 			//右键被按下
-			return Constant.X_VELOCITY_OF_DOODLE;
+			return Constant.X_VELOCITY_OF_DOODLE * xVelocityFactor;
 		}
-		return 0f;
+		return 0F;
 	}
 
 	//碰撞检测
 	void OnTriggerEnter2D (Collider2D other)
 	{
 		if (!isUsingProp && other.tag.Equals ("Platform")) {
-			xVelocity = initialXVelocity;
 			yVelocity = initialYVelocity;
+		}
+		if (!isUsingProp
+		    &&
+		    other.tag.Equals ("Prop")
+		    &&
+		    rebrithTimer < 0F) {
+			switch (other.name) {
+			case "coin(Clone)":
+				GameManager.INSTANCE.playerInfo.coin += 200;
+				break;
+			case "heart(Clone)":
+				GameManager.INSTANCE.life++;
+				break;
+			case "mushroom(Clone)":
+				isUsingProp = true;
+				propTime = 3F;
+				xVelocityFactor = 0F;
+				break;
+			case "rocket(Clone)":
+				isUsingProp = true;
+				propTime = 5F;
+				propVelocity = 30F;
+				break;
+			case "spring(Clone)":
+				isUsingProp = true;
+				propTime = 1F;
+				propVelocity = 30F;
+				break;
+			case "hole(Clone)":
+				GameManager.INSTANCE.life -= 3;
+				break;
+			case "monster(Clone)":
+				GameManager.INSTANCE.life -= 1;
+				break;
+			case "ufo(Clone)":
+				GameManager.INSTANCE.life -= 2;
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -172,8 +230,9 @@ public class Doodle : MonoBehaviour
 	void endUsingProp ()
 	{
 		isUsingProp = false;
-		propVelocity = 0f;
-		propTime = 0f;
+		propVelocity = 0F;
+		propTime = 0F;
+		xVelocityFactor = 1F;
 	}
 
 	//创建Doodle
@@ -181,7 +240,9 @@ public class Doodle : MonoBehaviour
 	{
 		//创建doodle
 		GameObject doodlePrefab = Resources.Load<GameObject> ("Doodle");
-		GameObject doodleObject = Instantiate<GameObject> (doodlePrefab);
+		GameObject doodleObject = Instantiate<GameObject> (
+			                          doodlePrefab
+		                          );
 		Doodle doodle = doodleObject.AddComponent<Doodle> ();
 		doodle.type = type;
 		doodle.setSkin (doodleObject);
@@ -190,7 +251,7 @@ public class Doodle : MonoBehaviour
 	}
 
 	//设置皮肤
-	public void setSkin(GameObject doodleObject)
+	public void setSkin (GameObject doodleObject)
 	{
 		//皮肤
 		GameObject skinPrefab = Resources.Load<GameObject> ("doodle/" + getSkinName ());
@@ -200,10 +261,9 @@ public class Doodle : MonoBehaviour
 	}
 
 	//获取皮肤名称
-	public static string getSkinName()
+	public static string getSkinName ()
 	{
-		switch (GameManager.INSTANCE.doodleType)
-		{
+		switch (GameManager.INSTANCE.doodleType) {
 		case 1:
 			return "bunny";
 		case 2:

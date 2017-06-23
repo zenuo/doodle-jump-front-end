@@ -6,8 +6,10 @@ using UnityEngine;
 public class Team {
 	public int id;
 	public int[] players;
+	public int[] avators;
+	public int[] coins;
 	public int createPlayerId;
-	public bool isOpen;
+	public bool open;
 	public long createTime;
 	public long closeTime;
 

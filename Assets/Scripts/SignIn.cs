@@ -14,18 +14,24 @@ public class SignIn : MonoBehaviour {
 	public InputField passwordInput;
 
 	void Start () {
-		Button signInBtn = signIn.GetComponent<Button> ();
-		signInBtn.onClick.AddListener (SignInTask);
+		signIn.onClick.AddListener (SignInTask);
 
-		Button cancleBtn = cancle.GetComponent<Button> ();
-		cancleBtn.onClick.AddListener (CancleTask);
+		cancle.onClick.AddListener (CancleTask);
 	}
 
 	void SignInTask()
 	{
 		string name = nameInput.text;
 		string password = passwordInput.text;
-		Debug.Log (string.Format ("SignIn: SignInTask\n{0}\n{1}", name, password));
+		//Debug.Log (string.Format ("SignIn: SignInTask\n{0}\n{1}", name, password));
+		string sessionId = HTTPUtil.signIn (name, password);
+		if (sessionId.Length == 32) {
+			GameManager.INSTANCE.sessionId = sessionId;
+			UIManager.INSTANCE.signIn.gameObject.SetActive (false);
+			GameManager.INSTANCE.playerInfo = HTTPUtil.getPlayerInfo();
+			//加载询问创建队伍或者加入队伍
+			UIManager.INSTANCE.loadChooseMode ();
+		}
 	}
 
 	void CancleTask()
