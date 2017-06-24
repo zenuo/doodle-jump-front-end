@@ -48,7 +48,7 @@ public class ChooseTeam : MonoBehaviour
 	void ChooseTask ()
 	{
 		Debug.Log ("ChooseTask");
-		GameManager.INSTANCE.team.id = dropdown.value;
+		GameManager.INSTANCE.gaming.team.id = dropdown.value;
 		UIManager.INSTANCE.chooseteam.gameObject.SetActive (false);
 		UIManager.INSTANCE.loadTeamStatus ();
 	}

@@ -22,9 +22,15 @@ public class ChooseSkin : MonoBehaviour {
 	void ChooseTask()
 	{
 		//doodle类型赋值给GameManager
-		GameManager.INSTANCE.doodleType = dropDown.value;
+		GameManager.INSTANCE.gaming.doodleType = dropDown.value;
 		UIManager.INSTANCE.chooseskin.gameObject.SetActive (false);
-		UIManager.INSTANCE.loadGaming ();
+		//判断游戏类型
+		if (GameManager.INSTANCE.gaming.gameStatus == Constant.GAME_ONLINE) {
+			
+		} else if (GameManager.INSTANCE.gaming.gameStatus == Constant.GAME_OFFLINE) {
+			UIManager.INSTANCE.loadGaming ();
+			GameManager.INSTANCE.gaming.initialize ();
+		}
 	}
 
 	void CancleTask()

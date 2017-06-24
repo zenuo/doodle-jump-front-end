@@ -10,9 +10,9 @@ public class Prop : MonoBehaviour
 		if (
 			other.tag.Equals ("Player")
 			&&
-			!GameManager.INSTANCE.doodle.isUsingProp
+			!GameManager.INSTANCE.gaming.doodle.isUsingProp
 			&&
-			GameManager.INSTANCE.doodle.rebrithTimer < 0F) {
+			GameManager.INSTANCE.gaming.doodle.rebrithTimer < 0F) {
 			Destroy (this.gameObject);
 		}
 	}

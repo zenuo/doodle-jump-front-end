@@ -46,16 +46,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\ChooseMode.cs" />
+     <Compile Include="Assets\Scripts\ChooseSkin.cs" />
+     <Compile Include="Assets\Scripts\ChooseTeam.cs" />
      <Compile Include="Assets\Scripts\Constant.cs" />
      <Compile Include="Assets\Scripts\Doodle.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameOver.cs" />
+     <Compile Include="Assets\Scripts\Gaming.cs" />
      <Compile Include="Assets\Scripts\HTTPUtil.cs" />
      <Compile Include="Assets\Scripts\JsonHelper.cs" />
      <Compile Include="Assets\Scripts\Message.cs" />
      <Compile Include="Assets\Scripts\Platform.cs" />
      <Compile Include="Assets\Scripts\PlayerInfo.cs" />
      <Compile Include="Assets\Scripts\PlayerStatus.cs" />
+     <Compile Include="Assets\Scripts\Prop.cs" />
+     <Compile Include="Assets\Scripts\SignIn.cs" />
+     <Compile Include="Assets\Scripts\SignUp.cs" />
+     <Compile Include="Assets\Scripts\Team.cs" />
+     <Compile Include="Assets\Scripts\TeamDTO.cs" />
+     <Compile Include="Assets\Scripts\TeamStatus.cs" />
      <Compile Include="Assets\Scripts\UIManager.cs" />
+     <Compile Include="Assets\Scripts\Welcome.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/home/yuanzhen/software/unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

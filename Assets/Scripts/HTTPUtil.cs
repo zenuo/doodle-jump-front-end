@@ -106,44 +106,44 @@ public class HTTPUtil
 			                    string.Format ("{0}team/create?session={1}&avator={2}&coin={3}",
 				                    Constant.HOST,
 				                    GameManager.INSTANCE.sessionId,
-				                    GameManager.INSTANCE.doodleType,
-				                    GameManager.INSTANCE.playerInfo.coin
+				GameManager.INSTANCE.gaming.doodleType,
+				GameManager.INSTANCE.gaming.playerInfo.coin
 			                    )
 		                    );
 		return Team.create (jsonString);
 	}
 
 	//获取状态
-	public static void pull ()
+	public static void pull (PlayerStatus[] playerStatuses)
 	{
 		string jsonString = GET (
 			                    string.Format ("{0}team/pull?session={1}", Constant.HOST, GameManager.INSTANCE.sessionId)
 		                    );
-		GameManager.INSTANCE.playerStatuses = JsonHelper.getJsonArray<PlayerStatus> (jsonString);
+		playerStatuses = JsonHelper.getJsonArray<PlayerStatus> (jsonString);
 	}
 
 	//上传状态
-	public static void push ()
+	public static void push (PlayerStatus playerStatus)
 	{
 		POSTJson (
 			string.Format ("{0}team/push-{1}", Constant.HOST, GameManager.INSTANCE.sessionId),
-			GameManager.INSTANCE.playerStatus.text ()
+			JsonUtility.ToJson (playerStatus)
 		);
 	}
 
 	//获取地面信息队列
-	public static void getPlatformInfo ()
+	public static void getPlatformInfo (Queue<string> platformInfoQueue, bool isNeedToLoadPlatformInfoFromServer)
 	{
-		if (GameManager.INSTANCE.isNeedToLoadPlatformInfoFromServer) {
+		if (isNeedToLoadPlatformInfoFromServer) {
 			//从服务器加载
-			string responseString = GET (string.Format ("{0}team/platform?session={1}&page={2}", Constant.HOST, GameManager.INSTANCE.sessionId, GameManager.INSTANCE.platfromInfoPage));
+			string responseString = GET (string.Format ("{0}team/platform?session={1}&page={2}", Constant.HOST, GameManager.INSTANCE.sessionId, GameManager.INSTANCE.gaming.platfromInfoPage));
 			//增加页数，供下次调用
-			GameManager.INSTANCE.platfromInfoPage++;
+			GameManager.INSTANCE.gaming.platfromInfoPage++;
 			//拆分responseString为数组
-			string[] tokens = responseString.Split (new string[] { "#" }, StringSplitOptions.None);
+			string[] tokens = responseString.Split (new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
 			//遍历数组，入队
 			foreach (string s in tokens) {
-				GameManager.INSTANCE.platformInfoQueue.Enqueue (s);
+				platformInfoQueue.Enqueue (s);
 			}
 		}
 	}
@@ -154,13 +154,13 @@ public class HTTPUtil
 			                    "{0}team/get?session={1}&teamId={2}",
 			                    Constant.HOST,
 			                    GameManager.INSTANCE.sessionId,
-			                    GameManager.INSTANCE.team.id
+			GameManager.INSTANCE.gaming.team.id
 		                    ));
 		//Debug.Log (jsonString);
 		return JsonUtility.FromJson<Team> (jsonString);
 	}
 
-	public static int joinTeam()
+	public static int joinTeam ()
 	{
 		return int.Parse (
 			GET (
@@ -168,13 +168,13 @@ public class HTTPUtil
 					"{0}team/join?session={1}&teamId={2}",
 					Constant.HOST,
 					GameManager.INSTANCE.sessionId,
-					GameManager.INSTANCE.team.id
+					GameManager.INSTANCE.gaming.team.id
 				)
 			)
 		);
 	}
 
-	public static int lockTeam()
+	public static int lockTeam ()
 	{
 		return int.Parse (
 			GET (
@@ -182,7 +182,7 @@ public class HTTPUtil
 					"{0}team/lock?session={1}&teamId={2}",
 					Constant.HOST,
 					GameManager.INSTANCE.sessionId,
-					GameManager.INSTANCE.team.id
+					GameManager.INSTANCE.gaming.team.id
 				)
 			)
 		);

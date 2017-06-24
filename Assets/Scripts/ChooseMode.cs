@@ -21,7 +21,7 @@ public class ChooseMode : MonoBehaviour {
 	{
 		//创建队伍
 		Debug.Log ("ChooseMode Create");
-		GameManager.INSTANCE.team = HTTPUtil.createTeam ();
+		GameManager.INSTANCE.gaming.team = HTTPUtil.createTeam ();
 		//进入新建的队伍信息界面
 		UIManager.INSTANCE.choosemode.gameObject.SetActive (false);
 		UIManager.INSTANCE.loadTeamStatus ();

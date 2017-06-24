@@ -28,7 +28,7 @@ public class SignIn : MonoBehaviour {
 		if (sessionId.Length == 32) {
 			GameManager.INSTANCE.sessionId = sessionId;
 			UIManager.INSTANCE.signIn.gameObject.SetActive (false);
-			GameManager.INSTANCE.playerInfo = HTTPUtil.getPlayerInfo();
+			GameManager.INSTANCE.gaming.playerInfo = HTTPUtil.getPlayerInfo();
 			//加载询问创建队伍或者加入队伍
 			UIManager.INSTANCE.loadChooseMode ();
 		}

@@ -125,9 +125,7 @@ public class UIManager : MonoBehaviour
 				Quaternion.identity
 			).transform;
 			gaming.SetParent (GameManager.INSTANCE.canvas.transform);
-			GameManager.INSTANCE.isGaming = true;
-			GameManager.INSTANCE.doodle = Doodle.create (GameManager.INSTANCE.doodleType);
-			UIManager.INSTANCE.loadPlayerPanel ();
+
 		} else {
 			gaming.gameObject.SetActive (true);
 		}
@@ -184,7 +182,7 @@ public class UIManager : MonoBehaviour
 	//加载玩家信息
 	public void loadPlayerPanel ()
 	{
-		if (GameManager.INSTANCE.isGaming) {
+		if (GameManager.INSTANCE.gaming.isGaming) {
 			//加载玩家面板
 			GameObject prefab1 = Resources.Load<GameObject> ("panel/player1");
 			//生成
@@ -204,7 +202,7 @@ public class UIManager : MonoBehaviour
 			).transform;
 			avator1.transform.SetParent (Camera.main.transform);
 			//加载队友
-			if (GameManager.INSTANCE.playerNum >= 2) {
+			if (GameManager.INSTANCE.gaming.playerNum >= 2) {
 				GameObject prefab2 = Resources.Load<GameObject> ("panel/player2");
 				//生成
 				panel2 = Instantiate<GameObject> (
@@ -224,7 +222,7 @@ public class UIManager : MonoBehaviour
 				avator2.transform.SetParent (Camera.main.transform);
 			}
 			//加载队友
-			if (GameManager.INSTANCE.playerNum == 3) {
+			if (GameManager.INSTANCE.gaming.playerNum == 3) {
 				GameObject prefab3 = Resources.Load<GameObject> ("panel/player3");
 				//生成
 				panel3 = Instantiate<GameObject> (
@@ -249,13 +247,13 @@ public class UIManager : MonoBehaviour
 
 	public void Update ()
 	{
-		if (GameManager.INSTANCE.isGaming) {
-			text1.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin, GameManager.INSTANCE.life);
-			if (GameManager.INSTANCE.playerNum >= 2) {
-				text2.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin, GameManager.INSTANCE.life);
+		if (GameManager.INSTANCE.gaming.isGaming) {
+			text1.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.gaming.score, GameManager.INSTANCE.gaming.playerInfo.coin, GameManager.INSTANCE.gaming.life);
+			if (GameManager.INSTANCE.gaming.playerNum >= 2) {
+				text2.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.gaming.score, GameManager.INSTANCE.gaming.playerInfo.coin, GameManager.INSTANCE.gaming.life);
 			}
-			if (GameManager.INSTANCE.playerNum >= 2) {
-				text3.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.score, GameManager.INSTANCE.playerInfo.coin, GameManager.INSTANCE.life);
+			if (GameManager.INSTANCE.gaming.playerNum >= 2) {
+				text3.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.gaming.score, GameManager.INSTANCE.gaming.playerInfo.coin, GameManager.INSTANCE.gaming.life);
 			}
 		}
 	}

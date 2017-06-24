@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class PlayerStatus{
+public class PlayerStatus
+{
 	public int id;
 	public int life;
 	public int coin;
@@ -11,25 +12,12 @@ public class PlayerStatus{
 	public float y;
 
 	//构造方法
-	public PlayerStatus()
+	public PlayerStatus (int id)
 	{
-		if (GameManager.INSTANCE != null) {
-			this.id = GameManager.INSTANCE.playerInfo.id;
-		}
+		this.id = id;
 	}
 
-	public string text()
-	{
-		//更新信息
-		this.life = GameManager.INSTANCE.life;
-		this.coin = GameManager.INSTANCE.playerInfo.coin;
-		this.x = GameManager.INSTANCE.doodle.transform.position.x;
-		this.y = GameManager.INSTANCE.doodle.transform.position.y;
-
-		return JsonUtility.ToJson (this);
-	}
-
-	public static PlayerStatus[] createArray(string jsonString)
+	public static PlayerStatus[] createArray (string jsonString)
 	{
 		return JsonHelper.getJsonArray<PlayerStatus> (jsonString);
 	}

@@ -24,8 +24,12 @@ public class Platform : MonoBehaviour
 
 	void Update ()
 	{
-		if (GameManager.INSTANCE.isGaming) {
-			updatePosition ();
+		try {
+			if (GameManager.INSTANCE.gaming.isGaming) {
+				updatePosition ();
+			}
+		} catch (System.Exception e) {
+			Debug.Log (e.StackTrace);
 		}
 	}
 
@@ -114,6 +118,19 @@ public class Platform : MonoBehaviour
 		}
 	}
 
+	//随机生成地面类型
+	public static int getPlatformType()
+	{
+		float randomValue = Random.value;
+		if (randomValue < 0.5F) {
+			return 1;
+		} else if (randomValue >= 0.5F && randomValue < 0.8F) {
+			return 2;
+		} else {
+			return 3;
+		}
+	}
+
 	//设置皮肤
 	public void setSkin (int type, GameObject parent, Vector3 position)
 	{
@@ -146,16 +163,18 @@ public class Platform : MonoBehaviour
 	}
 
 	//销毁道具
-	public void destroyChild ()
+	public void destroy ()
 	{
 		Destroy (skin.gameObject);
+		//Destroy (prop.gameObject);
+		Destroy (this.gameObject);
 	}
 
 	//碰撞后的处理
 	void OnTriggerEnter2D (Collider2D other)
 	{
 		//如果被玩家碰撞
-		if (other.tag.Equals ("Player") && !GameManager.INSTANCE.doodle.isUsingProp) {
+		if (other.tag.Equals ("Player") && !GameManager.INSTANCE.gaming.doodle.isUsingProp) {
 			isTriggered = true;	
 		}
 	}

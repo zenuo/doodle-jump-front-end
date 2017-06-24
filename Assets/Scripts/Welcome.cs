@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using LitJson;
 
 public class Welcome : MonoBehaviour
 {
@@ -31,6 +30,7 @@ public class Welcome : MonoBehaviour
 	{
 		Debug.Log ("Welcome: SignIn");
 		UIManager.INSTANCE.welcome.gameObject.SetActive (false);
+		GameManager.INSTANCE.gaming.gameStatus = Constant.GAME_ONLINE;
 		UIManager.INSTANCE.loadSignIn ();
 	}
 
@@ -38,7 +38,7 @@ public class Welcome : MonoBehaviour
 	{
 		Debug.Log ("Welcome: Offline");
 		UIManager.INSTANCE.welcome.gameObject.SetActive (false);
-		GameManager.INSTANCE.gameStatus = Constant.GAME_OFFLINE;
+		GameManager.INSTANCE.gaming.gameStatus = Constant.GAME_OFFLINE;
 		UIManager.INSTANCE.loadChooseSkin ();
 	}
 }

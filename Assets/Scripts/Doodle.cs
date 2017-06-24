@@ -53,7 +53,7 @@ public class Doodle : MonoBehaviour
 
 	void Update ()
 	{
-		if (GameManager.INSTANCE.isGaming) {
+		if (GameManager.INSTANCE.gaming.isGaming) {
 			updatePosition ();
 			updateSkin ();
 		}
@@ -111,8 +111,8 @@ public class Doodle : MonoBehaviour
 		}
 
 		//更新分数
-		if (this.transform.position.y > GameManager.INSTANCE.score) {
-			GameManager.INSTANCE.score = (int)this.transform.position.y;
+		if (this.transform.position.y > GameManager.INSTANCE.gaming.score) {
+			GameManager.INSTANCE.gaming.score = (int)this.transform.position.y;
 		}
 	}
 
@@ -183,10 +183,10 @@ public class Doodle : MonoBehaviour
 		    rebrithTimer < 0F) {
 			switch (other.name) {
 			case "coin(Clone)":
-				GameManager.INSTANCE.playerInfo.coin += 200;
+				GameManager.INSTANCE.gaming.playerInfo.coin += 200;
 				break;
 			case "heart(Clone)":
-				GameManager.INSTANCE.life++;
+				GameManager.INSTANCE.gaming.life++;
 				break;
 			case "mushroom(Clone)":
 				isUsingProp = true;
@@ -204,13 +204,13 @@ public class Doodle : MonoBehaviour
 				propVelocity = 30F;
 				break;
 			case "hole(Clone)":
-				GameManager.INSTANCE.life -= 3;
+				GameManager.INSTANCE.gaming.life -= 3;
 				break;
 			case "monster(Clone)":
-				GameManager.INSTANCE.life -= 1;
+				GameManager.INSTANCE.gaming.life -= 1;
 				break;
 			case "ufo(Clone)":
-				GameManager.INSTANCE.life -= 2;
+				GameManager.INSTANCE.gaming.life -= 2;
 				break;
 			default:
 				break;
@@ -263,7 +263,7 @@ public class Doodle : MonoBehaviour
 	//获取皮肤名称
 	public static string getSkinName ()
 	{
-		switch (GameManager.INSTANCE.doodleType) {
+		switch (GameManager.INSTANCE.gaming.doodleType) {
 		case 1:
 			return "bunny";
 		case 2:
@@ -289,5 +289,18 @@ public class Doodle : MonoBehaviour
 		default:
 			return "normal";
 		}
+	}
+
+	//重生
+	public void rebirth()
+	{
+		//重生Doodle
+		this.rebrithTimer = 1F;
+		//将Doodle移动到摄像机的位置
+		this.transform.Translate (
+			new Vector3 (0F, (float)GameManager.INSTANCE.gaming.score, 0F)
+			-
+			this.transform.position
+		);
 	}
 }
