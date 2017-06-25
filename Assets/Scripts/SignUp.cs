@@ -9,6 +9,8 @@ public class SignUp : MonoBehaviour {
 
 	public Button cancle;
 
+	public Text result;
+
 	public InputField nameInput;
 
 	public InputField emailInput;
@@ -31,6 +33,11 @@ public class SignUp : MonoBehaviour {
 		string bio = bioInput.text;
 		string password = passwordInput.text;
 		Debug.Log (string.Format ("{0}\n{1}\n{2}\n{3}\n", name, email, bio, password));
+		if (HTTPUtil.signUp (name, password, bio, email) == 0) {
+			result.text = string.Format ("\"{0}\" succeed", name);
+		} else {
+			result.text = string.Format ("\"{0}\" failed", name);
+		}
 	}
 
 	void CancleTask()

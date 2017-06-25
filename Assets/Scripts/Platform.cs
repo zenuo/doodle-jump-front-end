@@ -174,7 +174,7 @@ public class Platform : MonoBehaviour
 	void OnTriggerEnter2D (Collider2D other)
 	{
 		//如果被玩家碰撞
-		if (other.tag.Equals ("Player") && !GameManager.INSTANCE.gaming.doodle.isUsingProp) {
+		if (other.name.Equals ("Doodle(Clone)") && !GameManager.INSTANCE.gaming.doodle.isUsingProp) {
 			isTriggered = true;	
 		}
 	}

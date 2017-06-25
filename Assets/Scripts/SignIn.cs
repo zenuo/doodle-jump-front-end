@@ -29,8 +29,8 @@ public class SignIn : MonoBehaviour {
 			GameManager.INSTANCE.sessionId = sessionId;
 			UIManager.INSTANCE.signIn.gameObject.SetActive (false);
 			GameManager.INSTANCE.gaming.playerInfo = HTTPUtil.getPlayerInfo();
-			//加载询问创建队伍或者加入队伍
-			UIManager.INSTANCE.loadChooseMode ();
+			//加载皮肤选择
+			UIManager.INSTANCE.loadChooseSkin ();
 		}
 	}
 

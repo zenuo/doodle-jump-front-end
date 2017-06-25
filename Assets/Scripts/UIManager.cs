@@ -25,9 +25,6 @@ public class UIManager : MonoBehaviour
 	public Transform panel2;
 	public Text text2;
 	public Transform avator2;
-	public Transform panel3;
-	public Text text3;
-	public Transform avator3;
 
 	void Awake ()
 	{
@@ -196,13 +193,15 @@ public class UIManager : MonoBehaviour
 			text1 = panel1.transform.GetComponentInChildren<Text> ();
 			//头像
 			avator1 = Instantiate<GameObject> (
-				Resources.Load<GameObject> ("avator/" + Doodle.getSkinName ()),
+				Resources.Load<GameObject> ("avator/" + Doodle.getSkinName (
+					GameManager.INSTANCE.gaming.doodleType
+				)),
 				new Vector3 (-2.48f, 7.63f, 0f),
 				Quaternion.identity
 			).transform;
 			avator1.transform.SetParent (Camera.main.transform);
 			//加载队友
-			if (GameManager.INSTANCE.gaming.playerNum >= 2) {
+			if (GameManager.INSTANCE.gaming.playerNum == 2) {
 				GameObject prefab2 = Resources.Load<GameObject> ("panel/player2");
 				//生成
 				panel2 = Instantiate<GameObject> (
@@ -215,45 +214,33 @@ public class UIManager : MonoBehaviour
 				text2 = panel2.transform.GetComponentInChildren<Text> ();
 				//头像
 				avator2 = Instantiate<GameObject> (
-					Resources.Load<GameObject> ("avator/" + Doodle.getSkinName ()),
+					Resources.Load<GameObject> ("avator/" + Doodle.getSkinName (GameManager.INSTANCE.gaming.getTeamPlayerDoodleType ())),
 					new Vector3 (-0.624f, 7.63f, 0f),
 					Quaternion.identity
 				).transform;
 				avator2.transform.SetParent (Camera.main.transform);
 			}
-			//加载队友
-			if (GameManager.INSTANCE.gaming.playerNum == 3) {
-				GameObject prefab3 = Resources.Load<GameObject> ("panel/player3");
-				//生成
-				panel3 = Instantiate<GameObject> (
-					prefab3,
-					new Vector3 (600, 974f, 0f),
-					Quaternion.identity
-				).transform;
-				//设置父对象
-				panel3.transform.SetParent (GameManager.INSTANCE.canvas.transform);
-				text3 = panel3.transform.GetComponentInChildren<Text> ();
-				//头像
-				avator3 = Instantiate<GameObject> (
-					Resources.Load<GameObject> ("avator/" + Doodle.getSkinName ()),
-					new Vector3 (1.23f, 7.63f, 0f),
-					Quaternion.identity
-				).transform;
-				avator3.transform.SetParent (Camera.main.transform);
-			}
-
 		}
 	}
 
 	public void Update ()
 	{
-		if (GameManager.INSTANCE.gaming.isGaming) {
-			text1.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.gaming.score, GameManager.INSTANCE.gaming.playerInfo.coin, GameManager.INSTANCE.gaming.life);
-			if (GameManager.INSTANCE.gaming.playerNum >= 2) {
-				text2.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.gaming.score, GameManager.INSTANCE.gaming.playerInfo.coin, GameManager.INSTANCE.gaming.life);
-			}
-			if (GameManager.INSTANCE.gaming.playerNum >= 2) {
-				text3.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}", GameManager.INSTANCE.gaming.score, GameManager.INSTANCE.gaming.playerInfo.coin, GameManager.INSTANCE.gaming.life);
+		if (GameManager.INSTANCE.gaming.isGaming && GameManager.INSTANCE.gaming.isInitialized) {
+			text1.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}",
+				GameManager.INSTANCE.gaming.score, 
+				GameManager.INSTANCE.gaming.playerInfo.coin, 
+				GameManager.INSTANCE.gaming.life);
+			if (GameManager.INSTANCE.gaming.gameStatus == Constant.GAME_ONLINE) {
+				try {
+					if (GameManager.INSTANCE.gaming.playerStatuses.Length >= 1) {
+						text2.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}",
+							(int)GameManager.INSTANCE.gaming.playerStatuses [0].y, 
+							GameManager.INSTANCE.gaming.playerStatuses [0].coin, 
+							GameManager.INSTANCE.gaming.playerStatuses [0].life
+						);
+					}
+				} catch (System.Exception e){
+				}
 			}
 		}
 	}

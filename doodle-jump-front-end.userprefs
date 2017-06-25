@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/HTTPUtil.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Constant.cs">
     <Files>
-      <File FileName="Assets/Scripts/ChooseMode.cs" Line="20" Column="19" />
-      <File FileName="Assets/Scripts/TeamStatus.cs" Line="26" Column="37" />
-      <File FileName="Assets/Scripts/HTTPUtil.cs" Line="96" Column="12" />
+      <File FileName="Assets/Scripts/TeamStatus.cs" Line="34" Column="7" />
+      <File FileName="Assets/Scripts/Gaming.cs" Line="193" Column="44" />
+      <File FileName="Assets/Scripts/UIManager.cs" Line="242" Column="34" />
+      <File FileName="Assets/Scripts/Constant.cs" Line="46" Column="42" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

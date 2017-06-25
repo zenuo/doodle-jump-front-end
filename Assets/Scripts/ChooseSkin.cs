@@ -12,11 +12,8 @@ public class ChooseSkin : MonoBehaviour {
 	public Button cancle;
 
 	void Start () {
-		Button chooseBtn = choose.GetComponent<Button> ();
-		chooseBtn.onClick.AddListener (ChooseTask);
-
-		Button cancleBtn = cancle.GetComponent<Button> ();
-		cancleBtn.onClick.AddListener (CancleTask);
+		choose.onClick.AddListener (ChooseTask);
+		cancle.onClick.AddListener (CancleTask);
 	}
 		
 	void ChooseTask()
@@ -26,7 +23,7 @@ public class ChooseSkin : MonoBehaviour {
 		UIManager.INSTANCE.chooseskin.gameObject.SetActive (false);
 		//判断游戏类型
 		if (GameManager.INSTANCE.gaming.gameStatus == Constant.GAME_ONLINE) {
-			
+			UIManager.INSTANCE.loadChooseMode ();
 		} else if (GameManager.INSTANCE.gaming.gameStatus == Constant.GAME_OFFLINE) {
 			UIManager.INSTANCE.loadGaming ();
 			GameManager.INSTANCE.gaming.initialize ();

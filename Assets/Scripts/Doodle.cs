@@ -16,6 +16,9 @@ public class Doodle : MonoBehaviour
 	//速度
 	float yVelocity;
 
+	//是否由本地驱动
+	public bool isDirvedLocal = true;
+
 	//运动
 	Vector3 translation = new Vector3 ();
 
@@ -53,7 +56,8 @@ public class Doodle : MonoBehaviour
 
 	void Update ()
 	{
-		if (GameManager.INSTANCE.gaming.isGaming) {
+		//如果开始游戏且本对象由本地驱动
+		if (GameManager.INSTANCE.gaming.isGaming && isDirvedLocal) {
 			updatePosition ();
 			updateSkin ();
 		}
@@ -245,25 +249,25 @@ public class Doodle : MonoBehaviour
 		                          );
 		Doodle doodle = doodleObject.AddComponent<Doodle> ();
 		doodle.type = type;
-		doodle.setSkin (doodleObject);
+		doodle.setSkin (doodleObject, type);
 		doodle.transform.SetParent (UIManager.INSTANCE.gaming);
 		return doodle;
 	}
 
 	//设置皮肤
-	public void setSkin (GameObject doodleObject)
+	public void setSkin (GameObject doodleObject, int type)
 	{
 		//皮肤
-		GameObject skinPrefab = Resources.Load<GameObject> ("doodle/" + getSkinName ());
+		GameObject skinPrefab = Resources.Load<GameObject> ("doodle/" + getSkinName (type));
 		GameObject skinGameObject = Instantiate <GameObject> (skinPrefab);
 		this.skin = skinGameObject.transform;
 		this.skin.SetParent (doodleObject.transform);
 	}
 
 	//获取皮肤名称
-	public static string getSkinName ()
+	public static string getSkinName (int type)
 	{
-		switch (GameManager.INSTANCE.gaming.doodleType) {
+		switch (type) {
 		case 1:
 			return "bunny";
 		case 2:

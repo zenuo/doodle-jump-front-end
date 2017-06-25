@@ -31,18 +31,25 @@ public class TeamStatus : MonoBehaviour {
 			);
 			//检测队伍是否被锁定，如果被锁定，则开始游戏
 			if (!GameManager.INSTANCE.gaming.team.open) {
+				//GameManager.INSTANCE.gaming.doodleType = GameManager.INSTANCE.gaming.team.avators [GameManager.INSTANCE.gaming.createRemoteDoodleArrayOffset];
 				//开始游戏逻辑
-
+				UIManager.INSTANCE.teamstatus.gameObject.SetActive (false);
+				UIManager.INSTANCE.loadGaming ();
+				GameManager.INSTANCE.gaming.initialize ();
 			}
 		}
 	}
 
 	void StartTask()
 	{
-		//请求服务器：锁定队伍
-		GameManager.INSTANCE.gaming.gameStatus = Constant.GAME_ONLINE;
 		Debug.Log ("TeamStatus: StartTask");
+		UIManager.INSTANCE.teamstatus.gameObject.SetActive (false);
+		GameManager.INSTANCE.gaming.gameStatus = Constant.GAME_ONLINE;
+
+		//请求服务器：锁定队伍
 		HTTPUtil.lockTeam ();
+		UIManager.INSTANCE.loadGaming ();
+		GameManager.INSTANCE.gaming.initialize ();
 	}
 
 	void CancleTask()

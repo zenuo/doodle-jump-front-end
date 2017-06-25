@@ -14,6 +14,8 @@ public class ChooseTeam : MonoBehaviour
 
 	public float timer = 1F;
 
+	TeamDTO[] teams;
+
 	void Start ()
 	{
 		choose.onClick.AddListener (ChooseTask);
@@ -22,7 +24,7 @@ public class ChooseTeam : MonoBehaviour
 
 		dropdown.captionText.text = "Team List";
 
-		TeamDTO[] teams = HTTPUtil.listTeam ();
+		teams = HTTPUtil.listTeam ();
 		foreach (TeamDTO team in teams) {
 			dropdown.options.Add (
 				new Dropdown.OptionData(team.id.ToString ())
@@ -36,7 +38,7 @@ public class ChooseTeam : MonoBehaviour
 		if ((timer -= Time.deltaTime) <= 0F) {
 			timer = 1F;
 			dropdown.options.Clear ();
-			TeamDTO[] teams = HTTPUtil.listTeam ();
+			teams = HTTPUtil.listTeam ();
 			foreach (TeamDTO team in teams) {
 				dropdown.options.Add (
 					new Dropdown.OptionData(team.id.ToString ())
@@ -48,8 +50,9 @@ public class ChooseTeam : MonoBehaviour
 	void ChooseTask ()
 	{
 		Debug.Log ("ChooseTask");
-		GameManager.INSTANCE.gaming.team.id = dropdown.value;
+		//GameManager.INSTANCE.gaming.team.id = dropdown.value;错误的取值方法
 		UIManager.INSTANCE.chooseteam.gameObject.SetActive (false);
+		HTTPUtil.joinTeam ();
 		UIManager.INSTANCE.loadTeamStatus ();
 	}
 
@@ -62,7 +65,9 @@ public class ChooseTeam : MonoBehaviour
 
 	void ChangeCaptionText(int index)
 	{
-		dropdown.captionText.text = dropdown.value.ToString ();
-		//dropdown.captionText.text = dropdown.options [index].text;
+		dropdown.captionText.text = dropdown.options [index].text;
+		//将选择的队伍id传给GameManager.INSTANCE.gaming.team
+		GameManager.INSTANCE.gaming.team.id =
+			int.Parse (dropdown.options [index].text);
 	}
 }
