@@ -20,8 +20,7 @@ public class ChooseTeam : MonoBehaviour
 	{
 		choose.onClick.AddListener (ChooseTask);
 		cancle.onClick.AddListener (CancleTask);
-		dropdown.onValueChanged.AddListener (ChangeCaptionText);
-
+		dropdown.onValueChanged.AddListener (ChangeText);
 		dropdown.captionText.text = "Team List";
 
 		teams = HTTPUtil.listTeam ();
@@ -51,6 +50,8 @@ public class ChooseTeam : MonoBehaviour
 	{
 		Debug.Log ("ChooseTask");
 		//GameManager.INSTANCE.gaming.team.id = dropdown.value;错误的取值方法
+		//将选择的队伍id传给GameManager.INSTANCE.gaming.team
+		GameManager.INSTANCE.gaming.team.id = int.Parse (dropdown.options.ToArray ()[dropdown.value].text);
 		UIManager.INSTANCE.chooseteam.gameObject.SetActive (false);
 		HTTPUtil.joinTeam ();
 		UIManager.INSTANCE.loadTeamStatus ();
@@ -63,11 +64,9 @@ public class ChooseTeam : MonoBehaviour
 		UIManager.INSTANCE.loadChooseMode ();
 	}
 
-	void ChangeCaptionText(int index)
+	void ChangeText(int index)
 	{
+		Debug.Log ("ChangeText");
 		dropdown.captionText.text = dropdown.options [index].text;
-		//将选择的队伍id传给GameManager.INSTANCE.gaming.team
-		GameManager.INSTANCE.gaming.team.id =
-			int.Parse (dropdown.options [index].text);
 	}
 }

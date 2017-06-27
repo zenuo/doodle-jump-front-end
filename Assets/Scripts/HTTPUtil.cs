@@ -138,7 +138,7 @@ public class HTTPUtil
 	{
 		//从服务器加载
 		string responseString = GET (
-			                        string.Format ("{0}team/map?session={1}&page={2}&teamId={3}",
+			                        string.Format ("{0}team/map?session={1}&page={2}&team={3}",
 				                        Constant.HOST,
 				                        GameManager.INSTANCE.sessionId,
 				                        GameManager.INSTANCE.gaming.platfromInfoPage,
@@ -158,7 +158,7 @@ public class HTTPUtil
 	public static Team getTeam ()
 	{
 		String jsonString = GET (string.Format (
-			                    "{0}team/get?session={1}&teamId={2}",
+			                    "{0}team/get?session={1}&team={2}",
 			                    Constant.HOST,
 			                    GameManager.INSTANCE.sessionId,
 			                    GameManager.INSTANCE.gaming.team.id
@@ -172,7 +172,7 @@ public class HTTPUtil
 		return int.Parse (
 			GET (
 				string.Format (
-					"{0}team/join?session={1}&teamId={2}&avator={3}&coin={4}",
+					"{0}team/join?session={1}&team={2}&avator={3}&coin={4}",
 					Constant.HOST,
 					GameManager.INSTANCE.sessionId,
 					GameManager.INSTANCE.gaming.team.id,
@@ -188,11 +188,23 @@ public class HTTPUtil
 		return int.Parse (
 			GET (
 				string.Format (
-					"{0}team/lock?session={1}&teamId={2}",
+					"{0}team/lock?session={1}&team={2}",
 					Constant.HOST,
 					GameManager.INSTANCE.sessionId,
 					GameManager.INSTANCE.gaming.team.id
 				)
+			)
+		);
+	}
+
+	public static void updateRecord()
+	{
+		GET (
+			string.Format (
+				"{0}auth/record?session={1}&record={2}",
+				Constant.HOST,
+				GameManager.INSTANCE.sessionId,
+				GameManager.INSTANCE.gaming.playerInfo.record
 			)
 		);
 	}

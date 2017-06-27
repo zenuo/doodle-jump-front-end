@@ -10,6 +10,8 @@ public class GameOver : MonoBehaviour
 
 	public Button again;
 
+	int temp;
+
 	public Text socre;
 
 	void Start ()
@@ -19,9 +21,18 @@ public class GameOver : MonoBehaviour
 		again.onClick.AddListener (AgainTask);
 	}
 
-	void OnGUI()
+	void Update ()
 	{
-		socre.text = string.Format ("Score: {0}", GameManager.INSTANCE.gaming.score);
+		if (temp != GameManager.INSTANCE.gaming.score) {
+			if (GameManager.INSTANCE.gaming.score > GameManager.INSTANCE.gaming.playerInfo.record) {
+				temp = GameManager.INSTANCE.gaming.score;
+				GameManager.INSTANCE.gaming.playerInfo.record = temp;
+				HTTPUtil.updateRecord ();
+				socre.text = string.Format ("New Record: {0}", GameManager.INSTANCE.gaming.score);
+			} else {
+				socre.text = string.Format ("Score: {0}", GameManager.INSTANCE.gaming.score);
+			}
+		}
 	}
 
 	void AgainTask ()

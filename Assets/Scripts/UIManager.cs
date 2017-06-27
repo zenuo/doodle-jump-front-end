@@ -235,8 +235,8 @@ public class UIManager : MonoBehaviour
 					if (GameManager.INSTANCE.gaming.playerStatuses.Length >= 1) {
 						text2.text = string.Format ("score: {0}\ncoin:{1}\nlife:{2}",
 							(int)GameManager.INSTANCE.gaming.playerStatuses [0].y, 
-							GameManager.INSTANCE.gaming.playerStatuses [0].coin, 
-							GameManager.INSTANCE.gaming.playerStatuses [0].life
+							GameManager.INSTANCE.gaming.playerStatuses [0].c, 
+							GameManager.INSTANCE.gaming.playerStatuses [0].l
 						);
 					}
 				} catch (System.Exception e){

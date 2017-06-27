@@ -6,8 +6,9 @@ using UnityEngine;
 public class PlayerStatus
 {
 	public int id;
-	public int life;
-	public int coin;
+	public int l;
+	public int c;
+	public int d = 1;
 	public float x;
 	public float y;
 

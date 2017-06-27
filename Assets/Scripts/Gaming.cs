@@ -87,27 +87,25 @@ public class Gaming : MonoBehaviour
 				if (platformInfoQueue.Count <= Constant.MIN_COUNT_OF_PLATFROM_INFO_QUEUE) {
 					HTTPUtil.getPlatformInfo ();
 				}
-				//获取其他队员状态
-				new Thread (() => {
-					Thread.CurrentThread.IsBackground = true;
-					playerStatuses = HTTPUtil.pull ();
-				}).Start ();
-				//推送本地玩家的状态
-				playerStatus.coin = playerInfo.coin;
-				playerStatus.life = life;
+				//更新本地玩家的状态
+				playerStatus.c = playerInfo.coin;
+				playerStatus.l = life;
 				playerStatus.x = doodle.transform.position.x;
 				playerStatus.y = doodle.transform.position.y;
-				new Thread (() => {
-					Thread.CurrentThread.IsBackground = true;
-					HTTPUtil.push (playerStatus);
-				}).Start ();
+				playerStatus.d = (int)(doodle.transform.localScale.x / Mathf.Abs (doodle.transform.localScale.x));
 				try {
-					//绘制远程玩家doodle
-					remoteDoodle.transform.Translate (
-						new Vector3 (playerStatuses [0].x, playerStatuses [0].y, 0F)
-						-
-						remoteDoodle.transform.position
-					);
+					if (playerNum >= 2) {
+						//绘制远程玩家doodle
+						remoteDoodle.transform.Translate (
+							new Vector3 (playerStatuses [0].x, playerStatuses [0].y, 0F)
+							-
+							remoteDoodle.transform.position
+						);
+						Debug.Log ("playerStatuses [0].d " + playerStatuses [0].d);
+						if (playerStatuses [0].d < 0) {
+							remoteDoodle.changeSkinDirection ();
+						}
+					}
 				} catch (System.Exception e) {
 					Debug.Log (e.Message);
 				}
@@ -152,10 +150,14 @@ public class Gaming : MonoBehaviour
 			}
 			//初始化远程玩家doodle对象
 			playerNum = team.players.Length;
-			playerStatuses = new PlayerStatus[playerNum - 1];
-			remoteDoodle = Doodle.create (getTeamPlayerDoodleType ());
-			remoteDoodle.gameObject.name = "RemoteDoodle";
-			remoteDoodle.isDirvedLocal = false;
+			if (playerNum >= 2) {
+				playerStatuses = new PlayerStatus[playerNum - 1];
+				remoteDoodle = Doodle.create (getTeamPlayerDoodleType ());
+				remoteDoodle.gameObject.name = "RemoteDoodle";
+				remoteDoodle.isDirvedLocal = false;
+
+			}
+			StatusWorker.work ();
 		}
 		//初始化本地玩家doodle对象
 		doodle = Doodle.create (

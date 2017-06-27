@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading;
 
 public class Welcome : MonoBehaviour
 {
@@ -39,7 +40,9 @@ public class Welcome : MonoBehaviour
 	void SignOutTask()
 	{
 		Debug.Log ("Welcome: SignOut");
-		HTTPUtil.signOut ();
+		new Thread (() => {
+			HTTPUtil.signOut ();
+		}).Start ();
 	}
 
 	void OfflineTask()
@@ -53,7 +56,9 @@ public class Welcome : MonoBehaviour
 	void QuitTask()
 	{
 		Debug.Log ("Welcome: Quit");
-		HTTPUtil.signOut ();
+		new Thread (() => {
+			HTTPUtil.signOut ();
+		}).Start ();
 		Application.Quit ();
 	}
 }

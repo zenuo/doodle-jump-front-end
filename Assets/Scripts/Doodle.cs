@@ -81,11 +81,16 @@ public class Doodle : MonoBehaviour
 	}
 
 	//改变皮肤方向
-	void changeSkinDirection ()
+	public void changeSkinDirection ()
 	{
 		Vector3 scale = this.skin.localScale;
 		scale.x *= -1;
 		this.skin.localScale = scale;
+
+		if (GameManager.INSTANCE.gaming.gameStatus == Constant.GAME_ONLINE && this.isDirvedLocal) {
+			//变为相反数
+			GameManager.INSTANCE.gaming.playerStatus.d *= -1;
+		}
 	}
 
 	//更新位置

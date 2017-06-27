@@ -13,6 +13,8 @@ public class SignIn : MonoBehaviour {
 
 	public InputField passwordInput;
 
+	public Text result;
+
 	void Start () {
 		signIn.onClick.AddListener (SignInTask);
 
@@ -26,11 +28,14 @@ public class SignIn : MonoBehaviour {
 		//Debug.Log (string.Format ("SignIn: SignInTask\n{0}\n{1}", name, password));
 		string sessionId = HTTPUtil.signIn (name, password);
 		if (sessionId.Length == 32) {
+			result.text = string.Format ("\"{0}\" succeed", name);
 			GameManager.INSTANCE.sessionId = sessionId;
 			UIManager.INSTANCE.signIn.gameObject.SetActive (false);
-			GameManager.INSTANCE.gaming.playerInfo = HTTPUtil.getPlayerInfo();
+			GameManager.INSTANCE.gaming.playerInfo = HTTPUtil.getPlayerInfo ();
 			//加载皮肤选择
 			UIManager.INSTANCE.loadChooseSkin ();
+		} else {
+			result.text = string.Format ("\"{0}\" failed", name);
 		}
 	}
 

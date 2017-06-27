@@ -43,7 +43,7 @@ public class Constant {
 	public const float VELOCITY_OF_MOVING_PLATFORM = 0.5F;
 
 	//主机地址
-	public const string HOST = "http://yziyz:8080/";
+	public const string HOST = "http://yziyz.xin:8080/";
 
 	//地面信息队列中地面信息数量的最大值
 	public const int MAX_COUNT_OF_PLATFROM_INFO_QUEUE = 400;
